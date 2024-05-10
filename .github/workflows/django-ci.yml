@@ -31,4 +31,4 @@ jobs:
           pipenv run python src/manage.py check
       - name: Run tests
         run: |
-          pipenv run python src/manage.py test & run flake8
+          pipenv run python src/manage.py test & pipenv run flake8
