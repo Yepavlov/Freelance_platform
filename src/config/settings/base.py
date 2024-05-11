@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     "core",
     "freelance_platform",
     "accounts",
+    "clients",
+    "freelancers",
 ]
 
 MIDDLEWARE = [
