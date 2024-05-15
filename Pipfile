@@ -5,6 +5,12 @@ name = "pypi"
 
 [packages]
 django = "==4.2.11"
+django-phonenumber-field = "*"
+pillow = "*"
+phonenumbers = "*"
+django-extensions = "*"
+pyparsing = "*"
+pydot = "*"
 
 [dev-packages]
 flake8 = "*"

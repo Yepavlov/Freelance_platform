@@ -22,9 +22,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "phonenumber_field",
     "api",
     "core",
-    "freelance_platform",
     "accounts",
     "clients",
     "freelancers",
@@ -41,6 +41,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "config.urls"
+
+AUTH_USER_MODEL = "accounts.User"
+
 
 TEMPLATES = [
     {

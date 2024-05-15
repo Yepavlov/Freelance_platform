@@ -6,7 +6,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []  # NOQA
 
-INSTALLED_APPS += []  # NOQA
+INSTALLED_APPS += ["django_extensions"]  # NOQA
 
 DATABASES = {
     "default": {
