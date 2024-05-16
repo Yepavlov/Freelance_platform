@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from faker import Faker
+from djmoney.models.fields import MoneyField
 
 
 class BaseModel(models.Model):
@@ -21,12 +21,44 @@ class BaseModel(models.Model):
         return super().save(*args, **kwargs)
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+class State(models.Model):
+    name = models.CharField(max_length=100)
+    country = models.ForeignKey("core.Country", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+class City(models.Model):
+    name = models.CharField(max_length=100)
+    state = models.ForeignKey("core.State", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+class CurrencyType(models.IntegerChoices):
+    USD = 0, "USD"
+    EUR = 1, "EUR"
+
+
 class BankingInformation(BaseModel):
-    account_holder_name = models.CharField(max_length=255)
-    account_number = models.CharField(max_length=50)
-    bank_name = models.CharField(max_length=255)
-    country = models.CharField(max_length=100)
-    currency = models.CharField(max_length=50)
+    account_holder_name = models.CharField(_("account holder name"), max_length=255)
+    account_number = models.CharField(_("account number"), max_length=50)
+    bank_name = models.CharField(_("bank name"), max_length=255)
+    country = models.ForeignKey("core.Country", on_delete=models.SET_NULL, null=True, blank=True)
+    currency = models.PositiveSmallIntegerField(
+        _("currency"),
+        choices=CurrencyType.choices,
+        default=CurrencyType.USD,
+    )
     freelancer_profile = models.ForeignKey(
         "freelancers.FreelancerProfile",
         on_delete=models.CASCADE,
@@ -60,27 +92,17 @@ class Skill(models.Model):
     def __str__(self):
         return f"{self.title} ({self.id})"
 
-    @classmethod
-    def generate_skills(cls, count: int) -> None:
-        faker = Faker()
-        list_skills = []
-        for i in range(count):
-            skill = Skill(
-                title=faker.word(),
-            )
-            list_skills.append(skill)
-        Skill.objects.bulk_create(list_skills)
-
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
 
 
 class Payment(models.Model):
-    amount = models.DecimalField(
+    amount = MoneyField(
         _("amount"),
         max_digits=10,
         decimal_places=2,
+        default_currency="USD",
     )
     description = models.TextField(
         _("description"),
@@ -88,11 +110,11 @@ class Payment(models.Model):
         null=True,
         max_length=1000,
     )
-    payment_date = models.DateField(
+    date = models.DateField(
         _("payment date"),
         auto_now_add=True,
     )
-    payment_method = models.CharField(
+    method = models.CharField(
         _("payment method"),
         max_length=100,
     )
@@ -107,7 +129,7 @@ class Payment(models.Model):
         verbose_name_plural = "Payments"
 
     def __str__(self):
-        return f"${self.amount} - {self.payment_date} {self.job}"
+        return f"${self.amount} - {self.date} {self.job}"
 
     def save(self, *args, **kwargs):
         self.full_clean()

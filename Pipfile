@@ -11,6 +11,7 @@ phonenumbers = "*"
 django-extensions = "*"
 pyparsing = "*"
 pydot = "*"
+django-money = "*"
 
 [dev-packages]
 flake8 = "*"

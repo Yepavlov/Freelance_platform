@@ -3,29 +3,37 @@ from django.contrib.auth import get_user_model
 from clients.models import Job
 from clients.utils.samples import sample_client_profile, sample_job
 from core.models import Skill
+from core.utils.samples_for_location import (sample_city, sample_country,
+                                             sample_state)
 from freelancers.models import (FreelancerProfile, Proposal,
                                 ReviewAboutFreelancer)
 
 
-def sample_freelancer_profile(user_email: str, position: str, hourly_rate: float, location: str, sex: int, **params):
+def sample_freelancer_profile(user_email: str, position: str, hourly_rate: float, sex: int, **params):
     test_user = get_user_model()(email=user_email)
     test_user.set_password("123456789")
     test_user.save()
     my_skill = Skill.objects.create(
         title="SQL",
     )
+    country_instance = sample_country("USA")
+    state_instance = sample_state("USA", "CA")
+    city_instance = sample_city("USA", "CA", "San Jose")
+
     default = {
         "user": test_user,
         "description": "Python developer in test description",
         "birth_date": "1965-03-07",
         "photo": None,
+        "country": country_instance,
+        "state": state_instance,
+        "city": city_instance,
         "resume": None,
     }
     default.update(params)
     freelancer_profile = FreelancerProfile.objects.create(
         position=position,
         hourly_rate=hourly_rate,
-        location=location,
         sex=sex,
         **default,
     )
@@ -38,7 +46,6 @@ def sample_proposal(freelancer_email: str, client_email: str, hourly_rate: float
         user_email=freelancer_email,
         position="Python developer",
         hourly_rate=42.00,
-        location="LA, CA, USA",
         sex=0,
     )
     job = sample_job(
@@ -67,7 +74,6 @@ def sample_review_about_freelancer(freelancer_email: str, client_email: str, rat
         user_email=freelancer_email,
         position="Python developer",
         hourly_rate=42.00,
-        location="LA, CA, USA",
         sex=0,
     )
     my_skill = Skill.objects.create(
@@ -75,7 +81,6 @@ def sample_review_about_freelancer(freelancer_email: str, client_email: str, rat
     )
     client_profile = sample_client_profile(
         user_email=client_email,
-        location="San Jose, CA, USA",
     )
     job = Job.objects.create(
         title="Python developer",

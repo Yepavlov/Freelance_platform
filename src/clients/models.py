@@ -14,10 +14,9 @@ class ClientProfile(models.Model):
         null=True,
         max_length=255,
     )
-    location = models.CharField(
-        _("location"),
-        max_length=255,
-    )
+    country = models.ForeignKey("core.Country", on_delete=models.SET_NULL, null=True, blank=True)
+    state = models.ForeignKey("core.State", on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.ForeignKey("core.City", on_delete=models.SET_NULL, null=True, blank=True)
     company_description = models.CharField(
         _("company description"),
         blank=True,

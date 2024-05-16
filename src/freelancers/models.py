@@ -36,10 +36,9 @@ class FreelancerProfile(models.Model):
         max_digits=5,
         decimal_places=2,
     )
-    location = models.CharField(
-        _("location"),
-        max_length=255,
-    )
+    country = models.ForeignKey("core.Country", on_delete=models.SET_NULL, null=True, blank=True)
+    state = models.ForeignKey("core.State", on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.ForeignKey("core.City", on_delete=models.SET_NULL, null=True, blank=True)
     photo = models.ImageField(
         _("photo"),
         upload_to="images/freelancer_profile_photo/",
