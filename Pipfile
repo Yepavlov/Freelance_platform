@@ -12,6 +12,9 @@ django-extensions = "*"
 pyparsing = "*"
 pydot = "*"
 django-money = "*"
+django-debug-toolbar = "*"
+django-crispy-forms = "*"
+crispy-bootstrap5 = "*"
 
 [dev-packages]
 flake8 = "*"

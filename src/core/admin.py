@@ -1,3 +1,12 @@
 from django.contrib import admin
 
-# Register your models here.
+from core.models import City, Country, Skill, State
+
+admin.site.register(
+    [
+        City,
+        State,
+        Country,
+        Skill,
+    ]
+)

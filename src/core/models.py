@@ -22,14 +22,20 @@ class BaseModel(models.Model):
 
 
 class Country(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+    )
 
     def __str__(self):
         return self.name
 
 
 class State(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+    )
     country = models.ForeignKey("core.Country", on_delete=models.CASCADE)
 
     def __str__(self):
@@ -37,7 +43,10 @@ class State(models.Model):
 
 
 class City(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+    )
     state = models.ForeignKey("core.State", on_delete=models.CASCADE)
 
     def __str__(self):
@@ -87,6 +96,7 @@ class Skill(models.Model):
     title = models.CharField(
         _("title"),
         max_length=150,
+        unique=True,
     )
 
     def __str__(self):

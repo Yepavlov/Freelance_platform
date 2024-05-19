@@ -13,7 +13,7 @@ def sample_freelancer_profile(user_email: str, position: str, hourly_rate: float
     test_user = get_user_model()(email=user_email)
     test_user.set_password("123456789")
     test_user.save()
-    my_skill = Skill.objects.create(
+    my_skill, created = Skill.objects.get_or_create(
         title="SQL",
     )
     country_instance = sample_country("USA")
@@ -76,7 +76,7 @@ def sample_review_about_freelancer(freelancer_email: str, client_email: str, rat
         hourly_rate=42.00,
         sex=0,
     )
-    my_skill = Skill.objects.create(
+    my_skill, created = Skill.objects.get_or_create(
         title="SQL",
     )
     client_profile = sample_client_profile(
