@@ -29,11 +29,12 @@ class ClientProfile(models.Model):
         on_delete=models.CASCADE,
     )
     image = models.ImageField(
-        _("photo"),
+        _("image"),
         upload_to="images/client_profile_images/",
         blank=True,
         null=True,
         validators=[validate_file_size],
+        default="images/default.jpg",
     )
 
     class Meta:

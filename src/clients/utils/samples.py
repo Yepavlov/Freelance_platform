@@ -31,7 +31,7 @@ def sample_job(user_email: str, title: str, description: str, hourly_rate: float
     client_profile = sample_client_profile(
         user_email=user_email,
     )
-    my_skill = Skill.objects.create(
+    my_skill, created = Skill.objects.get_or_create(
         title="Python",
     )
     default = {
