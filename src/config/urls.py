@@ -23,10 +23,12 @@ from django.urls import include, path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
+    path("api-auth/", include("rest_framework.urls")),
     path("", include("core.urls")),
     path("accounts/", include("accounts.urls")),
     path("freelancers/", include("freelancers.urls")),
     path("clients/", include("clients.urls")),
+    path("api/", include("api.urls")),
 ]
 
 if settings.DEBUG:

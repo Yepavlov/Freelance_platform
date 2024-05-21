@@ -15,6 +15,10 @@ django-money = "*"
 django-debug-toolbar = "*"
 django-crispy-forms = "*"
 crispy-bootstrap5 = "*"
+djangorestframework = "*"
+markdown = "*"
+django-filter = "*"
+drf-yasg = "*"
 
 [dev-packages]
 flake8 = "*"
