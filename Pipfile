@@ -19,6 +19,8 @@ djangorestframework = "*"
 markdown = "*"
 django-filter = "*"
 drf-yasg = "*"
+djoser = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 flake8 = "*"

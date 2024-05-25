@@ -12,7 +12,7 @@ from accounts.utils.token_generator import TokenGenerator
 
 def send_registration_email(user_instance: get_user_model(), request: HttpRequest) -> None:
     message = render_to_string(
-        template_name="emails/registration_email.html",
+        template_name="email/registration_email.html",
         context={
             "user": user_instance,
             "domain": get_current_site(request),

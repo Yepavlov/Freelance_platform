@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from rest_framework.test import APIClient
 
 from freelancers.models import FreelancerProfile
 from freelancers.utils.samples import sample_freelancer_profile
@@ -7,6 +8,7 @@ from freelancers.utils.samples import sample_freelancer_profile
 
 class TestFreelancerProfile(TestCase):
     def setUp(self):
+        self.client = APIClient()
         self.freelancer_profile = sample_freelancer_profile(
             user_email="test@gmail.com",
             position="Python developer",

@@ -3,7 +3,10 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions, routers
 
-from api.views import (CityViewSet, CountryViewSet, StateCreateAPIView,
+from api.views import (CityViewSet, ClientProfileRetrieveAPIView,
+                       CountryViewSet, CreateClientProfileAPIView,
+                       CreateFreelancerProfileAPIView,
+                       FreelancerProfileRetrieveAPIView, StateCreateAPIView,
                        StateDestroyAPIView, StateRetrieveAPIView,
                        StateUpdateAPIView)
 
@@ -28,7 +31,29 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("", include(router.urls)),
     path("docs/", schema_view.with_ui("swagger", cache_timeout=0), name="swagger_docs"),
+    path("auth/", include("djoser.urls.jwt")),
+    path("auth/", include("djoser.urls")),
     path("create_state/", StateCreateAPIView.as_view(), name="create_state"),
+    path(
+        "create_freelancer_profile/",
+        CreateFreelancerProfileAPIView.as_view(),
+        name="create_freelancer_profile",
+    ),
+    path(
+        "retrieve_freelancer_profile/",
+        FreelancerProfileRetrieveAPIView.as_view(),
+        name="retrieve_freelancer_profile",
+    ),
+    path(
+        "create_client_profile/",
+        CreateClientProfileAPIView.as_view(),
+        name="create_client_profile",
+    ),
+    path(
+        "retrieve_client_profile/",
+        ClientProfileRetrieveAPIView.as_view(),
+        name="retrieve_client_profile",
+    ),
     path("update_state/<int:pk>/", StateUpdateAPIView.as_view(), name="update_state"),
     path(
         "retrieve_state/<int:pk>/",
