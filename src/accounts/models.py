@@ -68,7 +68,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = MyUserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = [
+        "first_name",
+        "last_name",
+        "password",
+        "is_staff",
+        "phone_number",
+        "user_type",
+    ]
 
     class Meta:
         verbose_name = _("user")
@@ -91,3 +98,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_registration_age(self):
         return f"Time on site: {timezone.now() - self.date_joined}"
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)

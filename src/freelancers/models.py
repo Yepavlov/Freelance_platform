@@ -45,6 +45,7 @@ class FreelancerProfile(models.Model):
         blank=True,
         null=True,
         validators=[validate_file_size],
+        default="images/default.jpg",
     )
     sex = models.PositiveSmallIntegerField(
         _("gender"),
@@ -66,7 +67,6 @@ class FreelancerProfile(models.Model):
         to=get_user_model(),
         on_delete=models.CASCADE,
         related_name="freelancer_profiles",
-        default="images/default.jpg",
     )
 
     class Meta:
