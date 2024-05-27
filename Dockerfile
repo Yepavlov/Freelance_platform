@@ -19,6 +19,4 @@ ENV PIPENV_VENV_IN_PROJECT=1
 
 RUN pipenv install --dev
 
-ENV PYTHONPATH="/freelancer_platform/src"
-
-CMD ["pipenv", "run", "python", "src/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["pipenv", "run", "python", "src/manage.py", "runserver", "0:8000"]
