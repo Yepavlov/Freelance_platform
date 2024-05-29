@@ -16,7 +16,10 @@ RUN python -m pip install --upgrade pip
 RUN pip install pipenv
 
 ENV PIPENV_VENV_IN_PROJECT=1
+ARG PIPENV_DEV=""
 
-RUN pipenv install --dev
+RUN pipenv install ${PIPENV_DEV}
+
+EXPOSE 8000
 
 CMD ["pipenv", "run", "python", "src/manage.py", "runserver", "0:8000"]
