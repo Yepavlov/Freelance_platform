@@ -21,6 +21,7 @@ django-filter = "*"
 drf-yasg = "*"
 djoser = "*"
 djangorestframework-simplejwt = "*"
+six = "*"
 
 [dev-packages]
 flake8 = "*"
