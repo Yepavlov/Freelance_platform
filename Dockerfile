@@ -11,6 +11,8 @@ WORKDIR /freelancer_platform
 COPY ./src ./src
 COPY ./Pipfile ./Pipfile
 COPY ./Pipfile.lock ./Pipfile.lock
+COPY ./commands ./commands
+
 
 RUN python -m pip install --upgrade pip
 RUN pip install pipenv
@@ -22,4 +24,4 @@ RUN pipenv install ${PIPENV_DEV}
 
 EXPOSE 8000
 
-CMD ["pipenv", "run", "python", "src/manage.py", "runserver", "0:8000"]
+CMD ["bash"]

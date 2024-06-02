@@ -22,6 +22,8 @@ drf-yasg = "*"
 djoser = "*"
 djangorestframework-simplejwt = "*"
 six = "*"
+psycopg2-binary = "*"
+python-dotenv = "*"
 
 [dev-packages]
 flake8 = "*"
