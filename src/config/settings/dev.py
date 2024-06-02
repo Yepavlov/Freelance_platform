@@ -1,6 +1,11 @@
 import os
 
+from dotenv import load_dotenv
+
 from config.settings.base import *  # NOQA
+
+load_dotenv()
+
 
 SECRET_KEY = "django-insecure-m2@0y4r0z6mz!sh=9f=-j*k5v_swbo*z^l3g9efhn9pv$9sv(j"
 
@@ -18,12 +23,32 @@ INSTALLED_APPS += [
     "debug_toolbar",  # NOQA
 ]
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",  # NOQA
+if os.getenv("GITHUB_WORKFLOW"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "postgres",
+            "USER": "postgres",
+            "PASSWORD": "postgres",
+            "HOST": "0.0.0.0",
+            "PORT": 5432,
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB"),
+            "USER": os.getenv("POSTGRES_USER"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+            "HOST": os.getenv("POSTGRES_HOST"),
+            "PORT": os.getenv("POSTGRES_PORT"),
+        },
+        # "default": {
+        #     "ENGINE": "django.db.backends.sqlite3",
+        #     "NAME": BASE_DIR / "db.sqlite3",  # NOQA
+        # },
+    }
 
 MIDDLEWARE += [
     "debug_toolbar.middleware.DebugToolbarMiddleware",  # NOQA
