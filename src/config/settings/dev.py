@@ -32,18 +32,38 @@ if os.getenv("GITHUB_WORKFLOW"):
             "PASSWORD": "postgres",
             "HOST": "0.0.0.0",
             "PORT": 5432,
-        }
+        },
     }
 else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("POSTGRES_DB"),
-            "USER": os.getenv("POSTGRES_USER"),
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-            "HOST": os.getenv("POSTGRES_HOST"),
-            "PORT": os.getenv("POSTGRES_PORT"),
+            "NAME": "Pavlov_fp_db",
+            "USER": "fp_user",
+            "PASSWORD": "admin",
+            "HOST": "localhost",
+            "PORT": "5432",
         },
+        # "default": {
+        #     "ENGINE": "django.db.backends.postgresql",
+        #     "NAME": os.getenv("POSTGRES_DB"),
+        #     "USER": os.getenv("POSTGRES_USER"),
+        #     "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        #     "HOST": os.getenv("POSTGRES_HOST"),
+        #     "PORT": os.getenv("POSTGRES_PORT"),
+        # },
+        # "default": {
+        #     "ENGINE": "djongo",
+        #     "NAME": os.getenv("MONGO_DB_NAME"),
+        #     "ENFORCE_SCHEMA": False,
+        #     "CLIENT": {
+        #         "host": os.getenv("MONGO_HOST"),
+        #         "port": int(os.getenv("MONGO_PORT", 27017)),
+        #         "username": os.getenv("MONGO_INITDB_ROOT_USERNAME"),
+        #         "password": os.getenv("MONGO_INITDB_ROOT_PASSWORD"),
+        #         "authSource": "admin",
+        #     },
+        # },
         # "default": {
         #     "ENGINE": "django.db.backends.sqlite3",
         #     "NAME": BASE_DIR / "db.sqlite3",  # NOQA
