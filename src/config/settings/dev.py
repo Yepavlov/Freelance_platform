@@ -1,5 +1,7 @@
 import os
+import sys
 
+from django.conf import settings
 from dotenv import load_dotenv
 
 from config.settings.base import *  # NOQA
@@ -17,10 +19,18 @@ INTERNAL_IPS = [
     "127.0.0.1",
     # ...
 ]
+ENABLE_DEBUG_TOOLBAR = DEBUG and "test" not in sys.argv
+
+if ENABLE_DEBUG_TOOLBAR:
+    INSTALLED_APPS += [
+        "debug_toolbar",
+    ]
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
 
 INSTALLED_APPS += [
     "django_extensions",  # NOQA
-    "debug_toolbar",  # NOQA
 ]
 
 if os.getenv("GITHUB_WORKFLOW"):
@@ -70,9 +80,6 @@ else:
         # },
     }
 
-MIDDLEWARE += [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",  # NOQA
-]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
