@@ -1,5 +1,3 @@
-
-
 services:
   backend:
     build: ./
@@ -16,6 +14,7 @@ services:
       - .env
     depends_on:
       - postgres
+      - mongodb
 
   postgres:
     image: postgres:15.7
@@ -26,7 +25,32 @@ services:
     env_file:
       - .env
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    restart: on-failure
+    env_file:
+      - .env
+    ports:
+      - "5000:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
 
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb_container
+    restart: on-failure
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    env_file:
+      - .env
 
 volumes:
   pg_data: { }
+  pgadmin_data: { }
+  mongo_data: { }

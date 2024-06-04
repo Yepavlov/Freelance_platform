@@ -22,6 +22,8 @@ ARG PIPENV_DEV=""
 
 RUN pipenv install ${PIPENV_DEV}
 
+RUN chmod +x /freelancer_platform/commands/start_server_dev.sh
+
 EXPOSE 8000
 
 CMD ["bash"]

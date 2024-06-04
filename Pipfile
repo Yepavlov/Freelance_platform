@@ -24,6 +24,8 @@ djangorestframework-simplejwt = "*"
 six = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
+djongo = "*"
+pymongo = "*"
 
 [dev-packages]
 flake8 = "*"

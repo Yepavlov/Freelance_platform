@@ -25,6 +25,7 @@ class StateForm(ModelForm):
         name = self.cleaned_data["name"]
         if State.objects.filter(name=name).exists():
             raise ValidationError(f"The state {name} already exists.")
+        return name
 
 
 class CountryForm(ModelForm):
@@ -36,6 +37,7 @@ class CountryForm(ModelForm):
         name = self.cleaned_data["name"]
         if Country.objects.filter(name=name).exists():
             raise ValidationError(f"The country {name} already exists.")
+        return name
 
 
 class SkillForm(ModelForm):

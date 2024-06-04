@@ -200,7 +200,9 @@
                             <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser2" style="">
                             <li><a class="dropdown-item">{{ user.get_full_name|title }}</a></li>
                             <li><a class="dropdown-item" href="#">Change password</a></li>
-                            <li><a class="dropdown-item" href="#">Freelancer Profile</a>
+                            <li><a class="dropdown-item"
+                                   href="{% url 'freelancers:freelancer_profile_details' user.freelancer_profiles.pk %}">Freelancer
+                                Profile</a>
                             </li>
                         {% elif user.user_type == 1 %}
                             <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
