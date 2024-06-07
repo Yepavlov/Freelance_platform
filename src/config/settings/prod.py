@@ -15,8 +15,10 @@ DATABASES = {
     }
 }
 
-STATIC_ROOT = "/freelancer_platform/src/static/"
+STATIC_ROOT = BASE_DIR / "static/"
 STATIC_URL = "/static/"
 
-MEDIA_ROOT = "/freelancer_platform/src/media/"
+MEDIA_ROOT = BASE_DIR / "media/"
 MEDIA_URL = "/media/"
+print(MEDIA_ROOT)
+print(STATIC_ROOT)
