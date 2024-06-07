@@ -1,10 +1,12 @@
+import os
+
 from config.settings.base import *  # NOQA
 
-SECRET_KEY = "django-insecure-m2@0y4r0z6mz!sh=9f=-j*k5v_swbo*z^l3g9efhn9pv$9sv(j"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"]
 
 DATABASES = {
     "default": {
@@ -13,4 +15,8 @@ DATABASES = {
     }
 }
 
-STATIC_URL = "static/"
+STATIC_ROOT = "/freelancer_platform/src/static/"
+STATIC_URL = "/static/"
+
+MEDIA_ROOT = "/freelancer_platform/src/media/"
+MEDIA_URL = "/media/"

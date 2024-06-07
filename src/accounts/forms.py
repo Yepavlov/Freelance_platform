@@ -28,3 +28,17 @@ class UserRegistrationForm(UserCreationForm):
             "password1",
             "password2",
         ]
+
+    @staticmethod
+    def normalize_text(text: str) -> str:
+        return text.strip().capitalize()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        first_name = cleaned_data.get("first_name")
+        last_name = cleaned_data.get("last_name")
+        if first_name:
+            cleaned_data["first_name"] = self.normalize_text(first_name)
+        if last_name:
+            cleaned_data["last_name"] = self.normalize_text(last_name)
+        return cleaned_data
