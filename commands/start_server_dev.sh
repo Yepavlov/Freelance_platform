@@ -3,4 +3,4 @@
 
 pipenv run python ./src/manage.py migrate
 pipenv run python ./src/manage.py check
-pipenv run python ./src/manage.py runserver 0:8000
+pipenv run python ./src/manage.py runserver 0:8010

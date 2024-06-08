@@ -4,17 +4,18 @@ services:
     container_name: fp_container
     working_dir: /freelancer_platform
     ports:
-      - "8010:8000"
+      - ${LOCAL_PORT}:${WSGI_PORT}
     command:
-      - ./commands/start_server_dev.sh
+      - ./commands/start_server_${MODE}.sh
     volumes:
       - ./src:/freelancer_platform/src
       - ./commands:/freelancer_platform/commands
+      - static_content:/freelancer_platform/src/static
+      - media_content:/freelancer_platform/src/media
     env_file:
       - .env
     depends_on:
       - postgres
-      - mongodb
 
   postgres:
     image: postgres:15.7
@@ -40,17 +41,50 @@ services:
 
 
   mongodb:
-    image: mongo:latest
-    container_name: mongodb_container
-    restart: on-failure
+    image: mongo:3-stretch
+    container_name: mongo_db_container
     ports:
-      - "27017:27017"
+      - 27017:27017
+    command: [ "--smallfiles" ]
     volumes:
       - mongo_data:/data/db
     env_file:
       - .env
+    restart: on-failure
+
+  mongoadmin:
+    image: mongo-express
+    restart: on-failure
+    container_name: mogno_admin_container
+    ports:
+      - 8091:8081
+    env_file:
+      - .env
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+
+  nginx:
+    image: nginx:1.19
+    volumes:
+      - static_content:/freelancer_platform/src/static
+      - media_content:/freelancer_platform/src/media
+      - ./nginx:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file:
+      - .env
+    depends_on:
+      - backend
+
+
 
 volumes:
   pg_data: { }
   pgadmin_data: { }
   mongo_data: { }
+  static_content: { }
+  media_content: { }
+

@@ -23,6 +23,7 @@
                 <th>Sex</th>
                 <th>Resume</th>
                 <th>Skill</th>
+                <th>Update Freelancer Profile</th>
             </tr>
             </thead>
             <tbody>
@@ -30,9 +31,9 @@
                 <td>
                     <img src="{{ freelancer_profile.photo.url }}" alt="Photo" style="max-width: 100px;">
                 </td>
-                <td>{{ user.first_name }}</td>
-                <td>{{ user.last_name }}</td>
-                <td>{{ user.email }}</td>
+                <td>{{ freelancer_profile.user.first_name }}</td>
+                <td>{{ freelancer_profile.user.last_name }}</td>
+                <td>{{ freelancer_profile.user.email }}</td>
                 {% if freelancer_profile.birth_date %}
                     <td>{{ freelancer_profile.birth_date }}</td>
                     <td>{{ freelancer_profile.age }}</td>
@@ -40,8 +41,8 @@
                     <td>Unknown</td>
                     <td>Unknown</td>
                 {% endif %}
-                <td>{{ user.get_user_type_display }}</td>
-                <td>{{ user.phone_number }}</td>
+                <td>{{ freelancer_profile.user.get_user_type_display }}</td>
+                <td>{{ freelancer_profile.user.phone_number }}</td>
                 <td>{{ freelancer_profile.position }}</td>
                 <td>{{ freelancer_profile.description }}</td>
                 <td>{{ freelancer_profile.hourly_rate }}</td>
@@ -57,6 +58,11 @@
                     {% empty %}
                         Empty
                     {% endfor %}
+                </td>
+                <td>
+                    <a type="button" class="btn btn-warning"
+                       href="{% url 'freelancers:freelancer_profile_update' freelancer_profile.pk %}">Edit
+                    </a>
                 </td>
             </tr>
             </tbody>
