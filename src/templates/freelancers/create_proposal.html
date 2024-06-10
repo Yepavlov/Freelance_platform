@@ -1,0 +1,36 @@
+{% extends 'index.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h2>Job Details</h2>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ job.title }}</h5>
+            <p class="card-text">{{ job.description }}</p>
+            <p class="card-text"><strong>Hourly Rate:</strong> ${{ job.hourly_rate }}</p>
+            <p class="card-text"><strong>Estimated End Date:</strong> {{ job.estimated_end_date }}</p>
+            <p class="card-text">
+                <strong>Skills:</strong>
+                {% for skill in job.skill.all %}
+                    <span class="badge bg-primary">{{ skill.title }}</span>
+                {% endfor %}
+            </p>
+            <p class="card-text">
+                <strong>Documentation:</strong>
+                {% if job.documentation %}
+                    <a href="{{ job.documentation.url }}">Download</a>
+                {% else %}
+                    None
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <h2>Make a Proposal</h2>
+    <form method="post" enctype="multipart/form-data" style="width: 25em; margin: auto">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" class="btn btn-primary" value="Create">
+    </form>
+{% endblock content %}

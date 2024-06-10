@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
-from freelancers.models import FreelancerProfile
+from freelancers.models import FreelancerProfile, Proposal
 
 
 class FreelancerForm(ModelForm):
@@ -70,3 +70,14 @@ class UpdateFreelancerForm(FreelancerForm):
                 freelancer_profile.save()
                 self.save_m2m()
         return freelancer_profile
+
+
+class ProposalForm(ModelForm):
+    class Meta:
+        model = Proposal
+        fields = (
+            "title",
+            "hourly_rate",
+            "estimated_end_date",
+            "documentation",
+        )
