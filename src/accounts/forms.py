@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from phonenumber_field.formfields import PhoneNumberField
@@ -42,3 +43,19 @@ class UserRegistrationForm(UserCreationForm):
         if last_name:
             cleaned_data["last_name"] = self.normalize_text(last_name)
         return cleaned_data
+
+
+class CompleteUserRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = [
+            "first_name",
+            "last_name",
+            "phone_number",
+            "user_type",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if "email" in self.fields:
+            self.fields.pop("email")

@@ -1,7 +1,8 @@
 from django.urls import path
 
 from clients.views import (ClientProfileDetailView, ClientProfileUpdateView,
-                           CreateClientProfileView, CreateJobView, JobListView)
+                           CreateClientProfileView, CreateJobView, JobDelete,
+                           JobListView, JobUpdate)
 
 app_name = "clients"
 
@@ -26,5 +27,15 @@ urlpatterns = [
         "list_jobs/",
         JobListView.as_view(),
         name="list_jobs",
+    ),
+    path(
+        "job_update/<int:pk>",
+        JobUpdate.as_view(),
+        name="job_update",
+    ),
+    path(
+        "job_delete/<int:pk>",
+        JobDelete.as_view(),
+        name="job_delete",
     ),
 ]

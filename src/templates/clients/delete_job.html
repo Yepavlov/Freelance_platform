@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <table class="table table-hover table-dark table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Hourly Rate</th>
+                <th scope="col">Estimated End Date</th>
+                <th scope="col">Skills</th>
+                <th scope="col">Documentation</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ job.title }}</td>
+                <td>{{ job.description }}</td>
+                <td>${{ job.hourly_rate }}</td>
+                <td>{{ job.estimated_end_date }}</td>
+                <td>
+                    {% for skill in job.skill.all %}
+                        <span class="badge bg-primary">{{ skill.title }}</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if job.documentation %}
+                        <a href="{{ job.documentation.url }}">Download</a>
+                    {% else %}
+                        None
+                    {% endif %}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <input type="submit" class="btn btn-primary" value="Delete">
+    </form>
+{% endblock content %}

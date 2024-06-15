@@ -29,6 +29,7 @@ urlpatterns = [
     path("freelancers/", include("freelancers.urls")),
     path("clients/", include("clients.urls")),
     path("api/", include("api.urls")),
+    path("oauth/", include("social_django.urls", namespace="social")),
 ]
 
 if settings.DEBUG:

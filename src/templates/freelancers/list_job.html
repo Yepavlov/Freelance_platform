@@ -4,7 +4,7 @@
 {% block content %}
     <div class="row mb-3">
         <div class="col-auto">
-            <form class="d-flex" method="GET" action="{% url 'clients:list_jobs' %}">
+            <form class="d-flex" method="GET" action="{% url 'freelancers:freelancer_list_job' %}">
                 <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search"
                        name="search">
                 <button class="btn btn-outline-primary" type="submit">Search</button>
@@ -21,9 +21,7 @@
             <th scope="col">Estimated End Date</th>
             <th scope="col">Skills</th>
             <th scope="col">Documentation</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-
+            <th scope="col">Proposal</th>
         </tr>
         </thead>
         <tbody>
@@ -47,16 +45,9 @@
                 </td>
                 <td>
                     <a type="button" class="btn btn-warning"
-                       href={% url 'clients:job_update' job.pk %}>Edit
+                       href={% url 'freelancers:create_proposal' job.pk %}>Make a proposal
                     </a>
                 </td>
-                <td>
-                    <a type="button" class="btn btn-danger"
-                       href={% url 'clients:job_delete' job.pk %}>Delete
-                    </a>
-                </td>
-
-
             </tr>
         {% endfor %}
         </tbody>

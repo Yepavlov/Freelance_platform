@@ -27,6 +27,7 @@ python-dotenv = "*"
 djongo = "*"
 pymongo = "*"
 mongoengine = "*"
+social-auth-app-django = "*"
 
 [dev-packages]
 flake8 = "*"

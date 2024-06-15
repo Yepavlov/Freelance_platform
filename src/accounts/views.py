@@ -1,12 +1,13 @@
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-from django.views.generic import CreateView, RedirectView
+from django.views.generic import CreateView, RedirectView, UpdateView
 
-from accounts.forms import UserRegistrationForm
+from accounts.forms import CompleteUserRegistrationForm, UserRegistrationForm
 from accounts.services.emails import send_registration_email
 from accounts.utils.token_generator import TokenGenerator
 
@@ -56,3 +57,22 @@ class UserLoginView(LoginView):
 
 class UserLogoutView(LogoutView):
     pass
+
+
+class CompleteUserRegistrationView(UpdateView):
+    model = get_user_model()
+    template_name = "accounts/complete_user_registration.html"
+    form_class = CompleteUserRegistrationForm
+    queryset = get_user_model().objects.all()
+    pk_url_kwarg = "uuid"
+
+    def form_valid(self, form):
+        self.object = form.save()
+        login(self.request, self.object, backend="django.contrib.auth.backends.ModelBackend")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        if self.object.user_type == 0:  # Freelancer
+            return reverse("freelancers:create_freelancer")
+        elif self.object.user_type == 1:  # Client
+            return reverse("clients:create_client")

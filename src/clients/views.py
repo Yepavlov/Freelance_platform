@@ -1,7 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  UpdateView)
 
 from clients.forms import ClientForm, JobForm, UpdateClientForm
 from clients.models import ClientProfile, Job
@@ -45,6 +46,21 @@ class JobListView(LoginRequiredMixin, ListView):
         if search_value:
             queryset = queryset.filter(title__icontains=search_value)
         return queryset
+
+
+class JobUpdate(LoginRequiredMixin, UpdateView):
+    model = Job
+    form_class = JobForm
+    template_name = "clients/update_job.html"
+    queryset = Job.objects.all()
+    success_url = reverse_lazy("clients:list_jobs")
+
+
+class JobDelete(LoginRequiredMixin, DeleteView):
+    model = Job
+    template_name = "clients/delete_job.html"
+    queryset = Job.objects.all()
+    success_url = reverse_lazy("clients:list_jobs")
 
 
 class ClientProfileDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
