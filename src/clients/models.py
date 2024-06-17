@@ -1,10 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from faker import Faker
+from decimal import Decimal, ROUND_DOWN
 
 from clients.utils.utils import documentation_upload
 from clients.utils.validators import rating_validator, validate_file_size
-from core.models import BaseModel
+from core.models import BaseModel, Country, State, City, Skill
 
 
 class ClientProfile(models.Model):
@@ -14,9 +16,15 @@ class ClientProfile(models.Model):
         null=True,
         max_length=255,
     )
-    country = models.ForeignKey("core.Country", on_delete=models.SET_NULL, null=True, blank=True)
-    state = models.ForeignKey("core.State", on_delete=models.SET_NULL, null=True, blank=True)
-    city = models.ForeignKey("core.City", on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey(
+        "core.Country", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    state = models.ForeignKey(
+        "core.State", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    city = models.ForeignKey(
+        "core.City", on_delete=models.SET_NULL, null=True, blank=True
+    )
     company_description = models.CharField(
         _("company description"),
         blank=True,
@@ -43,6 +51,40 @@ class ClientProfile(models.Model):
 
     def __str__(self):
         return f"{self.company} {self.user.first_name} {self.user.last_name} {self.id}"
+
+    @classmethod
+    def generate_clients_profile(cls, count: int) -> None:
+        faker = Faker()
+        users = list(
+            get_user_model()
+            .objects.filter(user_type=1)
+            .exclude(client_profiles__isnull=False)
+            .values_list("uuid", flat=True)
+        )
+        if len(users) < count:
+            raise ValueError(
+                "Not enough users available to create the requested number of Client Profiles"
+            )
+        cities = list(City.objects.all())
+        client_profile_list = []
+        for i in range(count):
+            user_uuid = faker.random.choice(users)
+            users.remove(user_uuid)
+            city = faker.random.choice(cities)
+            state = city.state
+            country = state.country
+            client_profile = ClientProfile(
+                company=faker.company(),
+                city=city,
+                state=state,
+                country=country,
+                company_description=faker.text(max_nb_chars=200),
+                user_id=user_uuid,
+            )
+
+            client_profile_list.append(client_profile)
+
+        ClientProfile.objects.bulk_create(client_profile_list)
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -90,6 +132,30 @@ class Job(BaseModel):
 
     def __str__(self):
         return f"{self.title}, {self.client_profile_id}"
+
+    @classmethod
+    def generate_jobs(cls, count: int) -> None:
+        faker = Faker()
+        client_profiles = list(ClientProfile.objects.all())
+        skills = list(Skill.objects.all())
+        for i in range(count):
+            client_profile = faker.random.choice(client_profiles)
+            skill_subset = faker.random.sample(
+                skills, faker.random.randint(1, len(skills))
+            )
+            hourly_rate = faker.pyfloat(left_digits=3, right_digits=2, positive=True)
+            hourly_rate = Decimal(hourly_rate).quantize(
+                Decimal("0.01"), rounding=ROUND_DOWN
+            )
+            job = Job(
+                title=faker.word(),
+                description=faker.text(max_nb_chars=200),
+                hourly_rate=hourly_rate,
+                estimated_end_date=faker.date_this_year(after_today=True),
+                client_profile_id=client_profile,
+            )
+            job.save()
+            job.skill.add(*skill_subset)
 
 
 class ReviewAboutClient(BaseModel):

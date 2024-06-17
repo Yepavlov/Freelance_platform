@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
+from faker import Faker
 
 
 class BaseModel(models.Model):
@@ -30,6 +31,17 @@ class Country(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def generate_countries(cls, count: int) -> None:
+        faker = Faker()
+        country_list = []
+        for i in range(count):
+            country = Country(
+                name=faker.country(),
+            )
+            country_list.append(country)
+        Country.objects.bulk_create(country_list)
+
 
 class State(models.Model):
     name = models.CharField(
@@ -40,6 +52,16 @@ class State(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def generate_states(cls, count: int) -> None:
+        faker = Faker()
+        state_list = []
+        countries = list(Country.objects.all())
+        for i in range(count):
+            state = State(name=faker.state(), country=faker.random.choice(countries))
+            state_list.append(state)
+        State.objects.bulk_create(state_list)
 
 
 class City(models.Model):
@@ -52,6 +74,16 @@ class City(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def generate_cities(cls, count: int) -> None:
+        faker = Faker()
+        city_list = []
+        states = list(State.objects.all())
+        for i in range(count):
+            city = City(name=faker.city(), state=faker.random.choice(states))
+            city_list.append(city)
+        City.objects.bulk_create(city_list)
+
 
 class CurrencyType(models.IntegerChoices):
     USD = 0, "USD"
@@ -62,7 +94,9 @@ class BankingInformation(BaseModel):
     account_holder_name = models.CharField(_("account holder name"), max_length=255)
     account_number = models.CharField(_("account number"), max_length=50)
     bank_name = models.CharField(_("bank name"), max_length=255)
-    country = models.ForeignKey("core.Country", on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey(
+        "core.Country", on_delete=models.SET_NULL, null=True, blank=True
+    )
     currency = models.PositiveSmallIntegerField(
         _("currency"),
         choices=CurrencyType.choices,
@@ -101,6 +135,17 @@ class Skill(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.id})"
+
+    @classmethod
+    def generate_skills(cls, count: int) -> None:
+        faker = Faker()
+        skill_list = []
+        for i in range(count):
+            skill = Skill(
+                title=faker.unique.word(),
+            )
+            skill_list.append(skill)
+        Skill.objects.bulk_create(skill_list)
 
     def save(self, *args, **kwargs):
         self.full_clean()

@@ -21,6 +21,7 @@
             <th scope="col">Estimated End Date</th>
             <th scope="col">Skills</th>
             <th scope="col">Documentation</th>
+            <th scope="col">Company</th>
             <th scope="col">Proposal</th>
         </tr>
         </thead>
@@ -43,6 +44,7 @@
                         None
                     {% endif %}
                 </td>
+                <td>{{ job.client_profile_id.company }}</td>
                 <td>
                     <a type="button" class="btn btn-warning"
                        href={% url 'freelancers:create_proposal' job.pk %}>Make a proposal
