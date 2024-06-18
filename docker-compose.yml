@@ -79,27 +79,27 @@ services:
     depends_on:
       - backend
 
-#  redis:
-#    image: redis
-#    env_file:
-#      - .env
-#    depends_on:
-#      - backend
+  redis:
+    image: redis
+    env_file:
+      - .env
+    depends_on:
+      - backend
 
-#  celery:
-#    build: ./
-#    container_name: celery_container
-#    command:
-#      - ./commands/start_celery.sh
-#    restart: on-failure
-#    volumes:
-#      - ./src:/freelancer_platform
-#      - ./commands:/freelancer_platform/commands
-#    env_file:
-#      - .env
-#    depends_on:
-#      - redis
-#      - backend
+  celery:
+    build: ./
+    container_name: celery_container
+    command:
+      - ./commands/start_celery.sh
+    restart: on-failure
+    volumes:
+      - ./src:/freelancer_platform
+      - ./commands:/freelancer_platform/commands
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - backend
 
   #  celerybeat:
   #    build: ./
@@ -116,18 +116,18 @@ services:
   #      - redis
   #      - backend
 
-#  flower:
-#    build: ./
-#    container_name: flower_container
-#    volumes:
-#      - ./src:/freelancer_platform
-#    env_file:
-#      - .env
-#    command: celery -A config flower --broker=redis://redis
-#    ports:
-#      - 5556:5555
-#    depends_on:
-#      - celery
+  flower:
+    build: ./
+    container_name: flower_container
+    volumes:
+      - ./src:/freelancer_platform
+    env_file:
+      - .env
+    command: celery -A config flower --broker=redis://redis
+    ports:
+      - 5556:5555
+    depends_on:
+      - celery
 
 #  redisadmin:
 #    image: redislabs/redisinsight
