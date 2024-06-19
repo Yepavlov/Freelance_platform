@@ -197,56 +197,56 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
 
-CELERY_BEAT_SCHEDULE = {
-    "some_periodic_task": {
-        "task": "quiz.tasks.mine_bitcoin",
-        "schedule": crontab(minute="*/2")
-    }
-}
+# CELERY_BEAT_SCHEDULE = {
+#     "some_periodic_task": {
+#         "task": "quiz.tasks.mine_bitcoin",
+#         "schedule": crontab(minute="*/2")
+#     }
+# }
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-            "style": "{",
-        },
-        "simple": {
-            "format": "{levelname} {message}",
-            "style": "{",
-        },
-    },
-    "handlers": {
-        "console": {
-            "level": "INFO",
-            "class": "logging.StreamHandler",
-            "formatter": "simple",
-        },
-        "mail_admins": {
-            "level": "ERROR",
-            "class": "django.utils.log.AdminEmailHandler",
-        },
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": os.path.join(BASE_DIR.parent, "LOGS", "debug.log"),
-            "formatter": "verbose",
-        },
-    },
-    "loggers": {
-        # 'django': {
-        #     'handlers': ['console'],
-        #     'propagate': True,
-        # },
-        # 'django.request': {
-        #     'handlers': ['mail_admins'],
-        #     'level': 'ERROR',
-        #     'propagate': False,
-        # },
-        "custom_logger": {
-            "handlers": ["console", "mail_admins", "file"],
-            "level": "DEBUG",
-        }
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "formatters": {
+#         "verbose": {
+#             "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+#             "style": "{",
+#         },
+#         "simple": {
+#             "format": "{levelname} {message}",
+#             "style": "{",
+#         },
+#     },
+#     "handlers": {
+#         "console": {
+#             "level": "INFO",
+#             "class": "logging.StreamHandler",
+#             "formatter": "simple",
+#         },
+#         "mail_admins": {
+#             "level": "ERROR",
+#             "class": "django.utils.log.AdminEmailHandler",
+#         },
+#         "file": {
+#             "level": "DEBUG",
+#             "class": "logging.FileHandler",
+#             "filename": os.path.join(BASE_DIR.parent, "LOGS", "debug.log"),
+#             "formatter": "verbose",
+#         },
+#     },
+#     "loggers": {
+#         # 'django': {
+#         #     'handlers': ['console'],
+#         #     'propagate': True,
+#         # },
+#         # 'django.request': {
+#         #     'handlers': ['mail_admins'],
+#         #     'level': 'ERROR',
+#         #     'propagate': False,
+#         # },
+#         "custom_logger": {
+#             "handlers": ["console", "mail_admins", "file"],
+#             "level": "DEBUG",
+#         }
+#     },
+# }

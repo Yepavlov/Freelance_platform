@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Users Task</title>
+</head>
+<body>
+<h1>Create Users</h1>
+<form action="{% url 'core:create_users_task' %}" method="post">
+    {% csrf_token %}
+    <label for="count">Number of Users:</label>
+    <input type="number" id="count" name="count" required>
+    <button type="submit">Generate Users</button>
+</form>
+</body>
+</html>

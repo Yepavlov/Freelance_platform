@@ -46,22 +46,22 @@ if os.getenv("GITHUB_WORKFLOW"):
     }
 else:
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "Pavlov_fp_db",
-            "USER": "fp_user",
-            "PASSWORD": "admin",
-            "HOST": "localhost",
-            "PORT": "5432",
-        },
         # "default": {
         #     "ENGINE": "django.db.backends.postgresql",
-        #     "NAME": os.getenv("POSTGRES_DB"),
-        #     "USER": os.getenv("POSTGRES_USER"),
-        #     "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        #     "HOST": os.getenv("POSTGRES_HOST"),
-        #     "PORT": os.getenv("POSTGRES_PORT"),
+        #     "NAME": "Pavlov_fp_db",
+        #     "USER": "fp_user",
+        #     "PASSWORD": "admin",
+        #     "HOST": "localhost",
+        #     "PORT": "5432",
         # },
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB"),
+            "USER": os.getenv("POSTGRES_USER"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+            "HOST": os.getenv("POSTGRES_HOST"),
+            "PORT": os.getenv("POSTGRES_PORT"),
+        },
         # "default": {
         #     "ENGINE": "djongo",
         #     "NAME": os.getenv("MONGO_DB_NAME"),
