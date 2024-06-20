@@ -1,14 +1,9 @@
-import logging
-from datetime import datetime
-
 from celery import shared_task
 from django.contrib.auth import get_user_model
 
 from clients.models import ClientProfile
 from core.models import City, Country, Skill, State
 from freelancers.models import FreelancerProfile
-
-logger = logging.getLogger(__name__)
 
 
 @shared_task
@@ -44,19 +39,3 @@ def generate_countries_task(count: int):
 @shared_task
 def generate_skills_task(count: int):
     Skill.generate_skills(count)
-
-
-@shared_task
-def generate_users_periodic_task(count=15):
-    get_user_model().generate_users(count)
-
-
-@shared_task
-def generate_users_periodic_task_for_leap_year(count=15):
-    now = datetime.now()
-    year = now.year
-    is_leap_year = year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
-    if is_leap_year:
-        get_user_model().generate_users(count)
-    else:
-        logger.info(f"Current year is not a leap year: {year}")

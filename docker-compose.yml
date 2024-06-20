@@ -102,20 +102,20 @@ services:
     ports:
       - 5556:5555
 
-  celerybeat:
-    build: ./
-    container_name: celerybeat-container
-    command:
-      - ./commands/start_celerybeat.sh
-    restart: on-failure
-    volumes:
-      - ./src:/freelancer_platform
-      - ./commands:/freelancer_platform/commands
-    env_file:
-      - .env
-    depends_on:
-      - redis
-      - backend
+#  celerybeat:
+#    build: ./
+#    container_name: celerybeat-container
+#    command:
+#      - ./commands/start_celerybeat.sh
+#    restart: on-failure
+#    volumes:
+#      - ./src:/freelancer_platform
+#      - ./commands:/freelancer_platform/commands
+#    env_file:
+#      - .env
+#    depends_on:
+#      - redis
+#      - backend
 
 
   #  redisadmin:
