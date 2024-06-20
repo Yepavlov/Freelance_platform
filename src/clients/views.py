@@ -1,14 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    ListView,
-    UpdateView,
-    RedirectView,
-)
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  RedirectView, UpdateView)
 
 from clients.forms import ClientForm, JobForm, UpdateClientForm
 from clients.models import ClientProfile, Job
@@ -97,9 +91,7 @@ class ClientProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateVie
         return super().get_queryset().select_related("user")
 
     def get_success_url(self):
-        return reverse_lazy(
-            "clients:client_profile_details", kwargs={"pk": self.object.pk}
-        )
+        return reverse_lazy("clients:client_profile_details", kwargs={"pk": self.object.pk})
 
     def test_func(self):
         obj = self.get_object()

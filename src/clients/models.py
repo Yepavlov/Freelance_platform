@@ -1,12 +1,13 @@
+from decimal import ROUND_DOWN, Decimal
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from faker import Faker
-from decimal import Decimal, ROUND_DOWN
 
 from clients.utils.utils import documentation_upload
 from clients.utils.validators import rating_validator, validate_file_size
-from core.models import BaseModel, Country, State, City, Skill
+from core.models import BaseModel, City, Country, Skill, State
 
 
 class ClientProfile(models.Model):
@@ -16,15 +17,9 @@ class ClientProfile(models.Model):
         null=True,
         max_length=255,
     )
-    country = models.ForeignKey(
-        "core.Country", on_delete=models.SET_NULL, null=True, blank=True
-    )
-    state = models.ForeignKey(
-        "core.State", on_delete=models.SET_NULL, null=True, blank=True
-    )
-    city = models.ForeignKey(
-        "core.City", on_delete=models.SET_NULL, null=True, blank=True
-    )
+    country = models.ForeignKey("core.Country", on_delete=models.SET_NULL, null=True, blank=True)
+    state = models.ForeignKey("core.State", on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.ForeignKey("core.City", on_delete=models.SET_NULL, null=True, blank=True)
     company_description = models.CharField(
         _("company description"),
         blank=True,
@@ -62,9 +57,7 @@ class ClientProfile(models.Model):
             .values_list("uuid", flat=True)
         )
         if len(users) < count:
-            raise ValueError(
-                "Not enough users available to create the requested number of Client Profiles"
-            )
+            raise ValueError("Not enough users available to create the requested number of Client Profiles")
         cities = list(City.objects.all())
         client_profile_list = []
         for i in range(count):
@@ -140,13 +133,9 @@ class Job(BaseModel):
         skills = list(Skill.objects.all())
         for i in range(count):
             client_profile = faker.random.choice(client_profiles)
-            skill_subset = faker.random.sample(
-                skills, faker.random.randint(1, len(skills))
-            )
+            skill_subset = faker.random.sample(skills, faker.random.randint(1, len(skills)))
             hourly_rate = faker.pyfloat(left_digits=3, right_digits=2, positive=True)
-            hourly_rate = Decimal(hourly_rate).quantize(
-                Decimal("0.01"), rounding=ROUND_DOWN
-            )
+            hourly_rate = Decimal(hourly_rate).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
             job = Job(
                 title=faker.word(),
                 description=faker.text(max_nb_chars=200),

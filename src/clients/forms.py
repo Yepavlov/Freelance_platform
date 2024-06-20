@@ -71,9 +71,7 @@ class UpdateClientForm(ClientForm):
         client_profile = super().save(commit=False)
         user = client_profile.user
         if user:
-            user.first_name = self.normalize_text(
-                self.cleaned_data.get("first_name", "")
-            )
+            user.first_name = self.normalize_text(self.cleaned_data.get("first_name", ""))
             user.last_name = self.normalize_text(self.cleaned_data.get("last_name", ""))
             user.phone_number = self.cleaned_data.get("phone_number")
             if commit:

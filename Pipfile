@@ -33,6 +33,7 @@ faker = "*"
 celery = "*"
 redis = "*"
 flower = "*"
+django-celery-beat = "*"
 
 [dev-packages]
 flake8 = "*"

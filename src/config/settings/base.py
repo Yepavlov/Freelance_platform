@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_celery_beat",
     "social_django",
     "drf_yasg",
     "crispy_forms",
@@ -61,9 +62,7 @@ SOCIAL_AUTH_URL_NAMESPACE = "social"
 SILENCED_SYSTEM_CHECKS = ["auth.W004"]
 
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = (
-    "139868080512-a1kelojisbgeudou9hqqu91sou0hnciv.apps.googleusercontent.com"
-)
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "139868080512-a1kelojisbgeudou9hqqu91sou0hnciv.apps.googleusercontent.com"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
 
 
@@ -141,9 +140,7 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
 }
 
@@ -197,12 +194,24 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
 
-# CELERY_BEAT_SCHEDULE = {
-#     "some_periodic_task": {
-#         "task": "quiz.tasks.mine_bitcoin",
-#         "schedule": crontab(minute="*/2")
-#     }
-# }
+CELERY_BEAT_SCHEDULE = {
+    "some_periodic_task": {
+        "task": "core.tasks.generate_users_periodic_task",
+        "schedule": crontab(minute="*/1"),
+    },
+    "task_every_3rd_july_10_40am": {
+        "task": "core.tasks.generate_users_periodic_task",
+        "schedule": crontab(minute="40", hour="10", day_of_month="3", month_of_year="7"),
+    },
+    "task_every_tuesday_12pm": {
+        "task": "core.tasks.generate_users_periodic_task",
+        "schedule": crontab(minute="0", hour="12", day_of_week="2"),
+    },
+    "task_every_leap_year_friday_13th_13min": {
+        "task": "core.tasks.generate_users_periodic_task_for_leap_year",
+        "schedule": crontab(minute="13", hour="*", day_of_month="13", day_of_week="5"),
+    },
+}
 
 # LOGGING = {
 #     "version": 1,

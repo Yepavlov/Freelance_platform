@@ -1,5 +1,5 @@
 from datetime import date
-from decimal import Decimal, ROUND_DOWN
+from decimal import ROUND_DOWN, Decimal
 
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -7,14 +7,11 @@ from django.utils.translation import gettext_lazy as _
 from faker import Faker
 
 from clients.models import Job
-from core.models import BaseModel, Country, State, City, Skill
+from core.models import BaseModel, City, Country, Skill, State
 from freelancers.utils.utils import documentation_upload
-from freelancers.utils.validators import (
-    birth_date_validator,
-    extension_validator,
-    rating_validator,
-    validate_file_size,
-)
+from freelancers.utils.validators import (birth_date_validator,
+                                          extension_validator,
+                                          rating_validator, validate_file_size)
 
 
 class SexChoices(models.IntegerChoices):
@@ -44,15 +41,9 @@ class FreelancerProfile(models.Model):
         max_digits=5,
         decimal_places=2,
     )
-    country = models.ForeignKey(
-        "core.Country", on_delete=models.SET_NULL, null=True, blank=True
-    )
-    state = models.ForeignKey(
-        "core.State", on_delete=models.SET_NULL, null=True, blank=True
-    )
-    city = models.ForeignKey(
-        "core.City", on_delete=models.SET_NULL, null=True, blank=True
-    )
+    country = models.ForeignKey("core.Country", on_delete=models.SET_NULL, null=True, blank=True)
+    state = models.ForeignKey("core.State", on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.ForeignKey("core.City", on_delete=models.SET_NULL, null=True, blank=True)
     photo = models.ImageField(
         _("photo"),
         upload_to="images/freelancer_profile_photo/",
@@ -96,9 +87,7 @@ class FreelancerProfile(models.Model):
         )
 
     def __str__(self):
-        return (
-            f"{self.user.first_name} {self.user.last_name} {self.position} ({self.id})"
-        )
+        return f"{self.user.first_name} {self.user.last_name} {self.position} ({self.id})"
 
     @classmethod
     def generate_freelancers_profile(cls, count: int) -> None:
@@ -110,9 +99,7 @@ class FreelancerProfile(models.Model):
             .values_list("uuid", flat=True)
         )
         if len(users) < count:
-            raise ValueError(
-                "Not enough users available to create the requested number of Freelancer Profiles"
-            )
+            raise ValueError("Not enough users available to create the requested number of Freelancer Profiles")
         cities = list(City.objects.all())
         skills = list(Skill.objects.all())
 
@@ -122,13 +109,9 @@ class FreelancerProfile(models.Model):
             city = faker.random.choice(cities)
             state = city.state
             country = state.country
-            skill_subset = faker.random.sample(
-                skills, faker.random.randint(1, len(skills))
-            )
+            skill_subset = faker.random.sample(skills, faker.random.randint(1, len(skills)))
             hourly_rate = faker.pyfloat(left_digits=3, right_digits=2, positive=True)
-            hourly_rate = Decimal(hourly_rate).quantize(
-                Decimal("0.01"), rounding=ROUND_DOWN
-            )
+            hourly_rate = Decimal(hourly_rate).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
             freelancer_profile = FreelancerProfile(
                 position=" ".join(faker.words(nb=2)),
                 description=faker.text(max_nb_chars=200),
@@ -188,9 +171,7 @@ class Proposal(BaseModel):
             job = faker.random.choice(jobs)
             freelancer_profile = faker.random.choice(freelancers_profile)
             hourly_rate = faker.pyfloat(left_digits=3, right_digits=2, positive=True)
-            hourly_rate = Decimal(hourly_rate).quantize(
-                Decimal("0.01"), rounding=ROUND_DOWN
-            )
+            hourly_rate = Decimal(hourly_rate).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
             proposal = Proposal(
                 title=faker.word(),
                 hourly_rate=hourly_rate,
