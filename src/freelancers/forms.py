@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
+from core.models import BankingInformation
 from freelancers.models import FreelancerProfile, Proposal
 
 
@@ -80,4 +81,16 @@ class ProposalForm(ModelForm):
             "hourly_rate",
             "estimated_end_date",
             "documentation",
+        )
+
+
+class BankingInformationForm(ModelForm):
+    class Meta:
+        model = BankingInformation
+        fields = (
+            "account_holder_name",
+            "account_number",
+            "bank_name",
+            "country",
+            "currency",
         )

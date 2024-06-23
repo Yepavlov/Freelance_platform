@@ -1,14 +1,19 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import (CreateView, DeleteView, ListView,
+                                  TemplateView, UpdateView)
 
+from clients.models import ClientProfile
 from core.forms import CityForm, CountryForm, SkillForm, StateForm
-from core.models import City, Country, Skill, State
+from core.models import BankingInformation, City, Country, Skill, State
 from core.tasks import (generate_cities_task, generate_client_profile_task,
                         generate_countries_task,
                         generate_freelancer_profile_task, generate_skills_task,
                         generate_states_task, generate_users_task)
+from freelancers.forms import BankingInformationForm
+from freelancers.models import FreelancerProfile
 
 
 class IndexView(TemplateView):
@@ -41,6 +46,56 @@ class CreateSkillView(CreateView):
     form_class = SkillForm
     template_name = "core/create_skill.html"
     success_url = reverse_lazy("core:index")
+
+
+class CreateBankingInformationView(LoginRequiredMixin, CreateView):
+    model = BankingInformation
+    form_class = BankingInformationForm
+    template_name = "core/create_banking_info.html"
+    success_url = reverse_lazy("core:index")
+
+    def form_valid(self, form):
+        if self.request.user.user_type == 0:
+            freelancer_profile = FreelancerProfile.objects.get(user=self.request.user)
+            form.instance.freelancer_profile = freelancer_profile
+        elif self.request.user.user_type == 1:
+            client_profile = ClientProfile.objects.get(user=self.request.user)
+            form.instance.client_profile = client_profile
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class BankingInformationListView(LoginRequiredMixin, ListView):
+    model = BankingInformation
+    template_name = "core/list_banking_info.html"
+    context_object_name = "banking_info"
+
+    def get_queryset(self):
+        if self.request.user.user_type == 0:
+            queryset = BankingInformation.objects.filter(freelancer_profile__user=self.request.user).select_related(
+                "country"
+            )
+        elif self.request.user.user_type == 1:
+            queryset = BankingInformation.objects.filter(client_profile__user=self.request.user).select_related(
+                "country"
+            )
+        return queryset
+
+
+class UpdateBankingInformationView(LoginRequiredMixin, UpdateView):
+    model = BankingInformation
+    form_class = BankingInformationForm
+    template_name = "core/update_banking_info.html"
+    queryset = BankingInformation.objects.all()
+    success_url = reverse_lazy("core:list_banking_info")
+
+
+class DeleteBankingInformation(LoginRequiredMixin, DeleteView):
+    model = BankingInformation
+    template_name = "core/delete_banking_info.html"
+    queryset = BankingInformation.objects.all()
+    success_url = reverse_lazy("core:list_banking_info")
+    context_object_name = "banking_info"
 
 
 def create_users_task_view(request: HttpRequest) -> HttpResponse:
