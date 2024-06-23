@@ -1,29 +1,25 @@
+# Use Python 3.11.3 slim image as the base
 FROM python:3.11.3-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Update package repositories
+RUN apt-get update
 
-RUN mkdir /freelancer_platform
-
+# Set up working directory
+RUN mkdir -p /freelancer_platform
 WORKDIR /freelancer_platform
 
+# Copy source code and requirements
 COPY ./src ./src
-COPY ./Pipfile ./Pipfile
-COPY ./Pipfile.lock ./Pipfile.lock
+COPY ./requirements.txt ./requirements.txt
 COPY ./commands ./commands
 
+# Install dependencies
+RUN pip install --upgrade pip && pip install -r ./requirements.txt
 
-RUN python -m pip install --upgrade pip
-RUN pip install pipenv
+# Create logs directory
+RUN mkdir -p /freelancer_platform/LOGS
 
-ENV PIPENV_VENV_IN_PROJECT=1
-ARG PIPENV_DEV=""
-
-RUN pipenv install ${PIPENV_DEV}
-
-RUN chmod +x /freelancer_platform/commands/start_server_dev.sh
-
+# Expose port (if necessary)
 EXPOSE 8000
 
 CMD ["bash"]

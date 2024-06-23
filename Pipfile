@@ -28,6 +28,12 @@ djongo = "*"
 pymongo = "*"
 mongoengine = "*"
 social-auth-app-django = "*"
+gunicorn = "*"
+faker = "*"
+celery = "*"
+redis = "*"
+flower = "*"
+django-celery-beat = "*"
 
 [dev-packages]
 flake8 = "*"

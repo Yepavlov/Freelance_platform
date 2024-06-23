@@ -2,10 +2,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
-                                  UpdateView)
+                                  RedirectView, UpdateView)
 
 from clients.forms import ClientForm, JobForm, UpdateClientForm
 from clients.models import ClientProfile, Job
+from freelancers.models import Proposal
 
 
 class CreateClientProfileView(LoginRequiredMixin, CreateView):
@@ -38,8 +39,13 @@ class JobListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = (
-            Job.objects.select_related("client_profile_id")
-            .prefetch_related("skill")
+            Job.objects.select_related(
+                "client_profile_id",
+            )
+            .prefetch_related(
+                "skill",
+                "proposals",
+            )
             .filter(client_profile_id__user=self.request.user)
         )
         search_value = self.request.GET.get("search")
@@ -90,3 +96,27 @@ class ClientProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateVie
     def test_func(self):
         obj = self.get_object()
         return obj.user == self.request.user
+
+
+class ClientProposalDetailView(LoginRequiredMixin, DetailView):
+    model = Proposal
+    template_name = "clients/proposal_detail.html"
+    context_object_name = "proposal"
+
+    def get_queryset(self):
+        return super().get_queryset().select_related("job_id")
+
+
+class IsConcludedProposalView(LoginRequiredMixin, RedirectView):
+    url = reverse_lazy("clients:list_jobs")
+
+    def get_redirect_url(self, *args, **kwargs):
+        proposal = get_object_or_404(Proposal, pk=kwargs["pk"])
+        job = proposal.job_id
+
+        proposal.selected = True
+        proposal.save()
+        job.is_concluded = True
+        job.save()
+
+        return super().get_redirect_url(*args, **kwargs)

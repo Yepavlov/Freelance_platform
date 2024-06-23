@@ -1,6 +1,11 @@
-from django.db import models
+import logging
+
+from django.db import IntegrityError, models, transaction
 from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
+from faker import Faker
+
+logger = logging.getLogger(__name__)
 
 
 class BaseModel(models.Model):
@@ -30,6 +35,22 @@ class Country(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def generate_countries(cls, count: int) -> None:
+        faker = Faker()
+        created_count = 0
+
+        while created_count < count:
+            try:
+                with transaction.atomic():
+                    country_name = faker.country()
+                    if not cls.objects.filter(name=country_name).exists():
+                        cls.objects.create(name=country_name)
+                        created_count += 1
+            except IntegrityError as e:
+                logger.error(f"IntegrityError: {e}")
+                continue
+
 
 class State(models.Model):
     name = models.CharField(
@@ -41,6 +62,22 @@ class State(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def generate_states(cls, count: int) -> None:
+        faker = Faker()
+        created_count = 0
+        countries = list(Country.objects.all())
+        while created_count < count:
+            try:
+                with transaction.atomic():
+                    state_name = faker.state()
+                    if not cls.objects.filter(name=state_name).exists():
+                        cls.objects.create(name=state_name, country=faker.random.choice(countries))
+                        created_count += 1
+            except IntegrityError as e:
+                logger.error(f"IntegrityError: {e}")
+                continue
+
 
 class City(models.Model):
     name = models.CharField(
@@ -51,6 +88,21 @@ class City(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def generate_cities(cls, count: int) -> None:
+        faker = Faker()
+        created_count = 0
+        states = list(State.objects.all())
+        while created_count < count:
+            try:
+                with transaction.atomic():
+                    city_name = faker.city()
+                    if not cls.objects.filter(name=city_name).exists():
+                        cls.objects.create(name=city_name, state=faker.random.choice(states))
+                        created_count += 1
+            except IntegrityError as e:
+                logger.error(f"IntegrityError: {e}")
 
 
 class CurrencyType(models.IntegerChoices):
@@ -101,6 +153,17 @@ class Skill(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.id})"
+
+    @classmethod
+    def generate_skills(cls, count: int) -> None:
+        faker = Faker()
+        skill_list = []
+        for i in range(count):
+            skill = Skill(
+                title=faker.unique.word(),
+            )
+            skill_list.append(skill)
+        Skill.objects.bulk_create(skill_list)
 
     def save(self, *args, **kwargs):
         self.full_clean()

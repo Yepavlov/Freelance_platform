@@ -1,0 +1,40 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <table class="table table-hover table-dark table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Hourly Rate</th>
+            <th scope="col">Estimated End Date</th>
+            <th scope="col">Documentation</th>
+            <th scope="col">Freelancer</th>
+            <th scope="col">Job</th>
+            <th scope="col">Choose</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ proposal.title }}</td>
+            <td>${{ proposal.hourly_rate }}</td>
+            <td>{{ proposal.estimated_end_date }}</td>
+            <td>
+                {% if proposal.documentation %}
+                    {{ proposal.documentation.url }}
+                {% else %}
+                    None
+                {% endif %}
+            </td>
+            <td>{{ proposal.freelancer_profile_id.user.get_full_name|title }}</td>
+            <td>{{ proposal.job_id.title }}</td>
+            <td>
+                <a type="button" class="btn btn-danger"
+                   href={% url 'clients:choose_proposal' proposal.pk %}>Choose the proposal
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock content %}

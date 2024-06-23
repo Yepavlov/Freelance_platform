@@ -21,6 +21,7 @@
             <th scope="col">Estimated End Date</th>
             <th scope="col">Skills</th>
             <th scope="col">Documentation</th>
+            <th scope="col">Proposals</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
 
@@ -43,6 +44,16 @@
                         <a href="{{ job.documentation.url }}">Download</a>
                     {% else %}
                         None
+                    {% endif %}
+                </td>
+                <td>
+                    {% if job.proposals %}
+                        {% for proposal in job.proposals.all %}
+                            <a href="{% url 'clients:job_proposal_detail' proposal.pk %}">{{ proposal.title }}</a>
+                            {% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            Empty
+                        {% endfor %}
                     {% endif %}
                 </td>
                 <td>
