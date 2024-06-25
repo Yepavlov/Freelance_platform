@@ -62,9 +62,7 @@ SOCIAL_AUTH_URL_NAMESPACE = "social"
 SILENCED_SYSTEM_CHECKS = ["auth.W004"]
 
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = (
-    "139868080512-a1kelojisbgeudou9hqqu91sou0hnciv.apps.googleusercontent.com"
-)
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "139868080512-a1kelojisbgeudou9hqqu91sou0hnciv.apps.googleusercontent.com"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
 
 
@@ -142,9 +140,7 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
 }
 

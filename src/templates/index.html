@@ -183,66 +183,72 @@
                 <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{% url 'core:index' %}">Home</a>
                 <div>
                     {% if user.is_authenticated %}
-                        {% if user.user_type == 0 %}
-                            <a class="nav-link fw-bold py-1 px-0 me-3"
-                               href="{% url 'freelancers:freelancer_list_job' %}">Find work</a>
-                            <a class="nav-link fw-bold py-1 px-0 me-3"
-                               href="{% url 'freelancers:list_proposals' %}">My proposals</a>
-                            
-                            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
-                               id="dropdownUser2"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                {% if user.freelancer_profiles %}
-                                    <img src="{{ user.freelancer_profiles.photo.url }}" alt="mdo" width="32" height="32"
-                                         class="rounded-circle">
-                                {% else %}
-                                    <img src="{% static 'images/default.jpg' %} }" alt="mdo" width="32" height="32"
-                                         class="rounded-circle">
-                                {% endif %}
-                            </a>
-                            <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser2" style="">
-                            <li><a class="dropdown-item">{{ user.get_full_name|title }}</a></li>
-                            <li><a class="dropdown-item" href="#">Change password</a></li>
-                            {% if user.freelancer_profiles %}
-                                <li><a class="dropdown-item"
-                                       href="{% url 'freelancers:freelancer_profile_details' user.freelancer_profiles.pk %}">Freelancer
-                                    Profile</a>
-                                </li>
-                            {% endif %}
+                    {% if user.user_type == 0 %}
+                    <a class="nav-link fw-bold py-1 px-0 me-3"
+                       href="{% url 'freelancers:freelancer_list_job' %}">Find work</a>
+                    <a class="nav-link fw-bold py-1 px-0 me-3"
+                       href="{% url 'freelancers:list_proposals' %}">My proposals</a>
+
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
+                       id="dropdownUser2"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if user.freelancer_profiles %}
+                        <img src="{{ user.freelancer_profiles.photo.url }}" alt="mdo" width="32" height="32"
+                             class="rounded-circle">
+                        {% else %}
+                        <img src="{% static 'images/default.jpg' %} }" alt="mdo" width="32" height="32"
+                             class="rounded-circle">
+                        {% endif %}
+                    </a>
+                    <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser2" style="">
+                        <li><a class="dropdown-item">{{ user.get_full_name|title }}</a></li>
+                        <li><a class="dropdown-item" href="#">Change password</a></li>
+                        {% if user.freelancer_profiles %}
+                        <li><a class="dropdown-item"
+                               href="{% url 'freelancers:freelancer_profile_details' user.freelancer_profiles.pk %}">Freelancer
+                            Profile</a>
+                        </li>
+                        {% endif %}
+                        <!-- Add Banking Information Link -->
+                        <li><a class="dropdown-item" href="{% url 'core:list_banking_info'%}">Banking Information</a>
+                        </li>
 
                         {% elif user.user_type == 1 %}
-                            <a class="nav-link fw-bold py-1 px-0 me-3" href="{% url 'clients:create_job' %}">Create
-                                job</a>
-                            <a class="nav-link fw-bold py-1 px-0 me-3"
-                               href="{% url 'clients:list_jobs' %}">List jobs</a>
+                        <a class="nav-link fw-bold py-1 px-0 me-3" href="{% url 'clients:create_job' %}">Create
+                            job</a>
+                        <a class="nav-link fw-bold py-1 px-0 me-3"
+                           href="{% url 'clients:list_jobs' %}">List jobs</a>
 
-                            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
-                               id="dropdownUser2"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                {% if user.client_profiles %}
-                                    <img src="{{ user.client_profiles.image.url }}" alt="mdo" width="32" height="32"
-                                         class="rounded-circle">
-                                {% else %}
-                                    <img src="{% static 'images/default.jpg' %} }" alt="mdo" width="32" height="32"
-                                         class="rounded-circle">
-                                {% endif %}
-                            </a>
-                            <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser2" style="">
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
+                           id="dropdownUser2"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if user.client_profiles %}
+                            <img src="{{ user.client_profiles.image.url }}" alt="mdo" width="32" height="32"
+                                 class="rounded-circle">
+                            {% else %}
+                            <img src="{% static 'images/default.jpg' %} }" alt="mdo" width="32" height="32"
+                                 class="rounded-circle">
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser2" style="">
                             <li><a class="dropdown-item">{{ user.client_profiles.company|title }}</a></li>
                             <li><a class="dropdown-item" href="#">Change password</a></li>
                             {% if user.client_profiles %}
-                                <li><a class="dropdown-item"
-                                       href="{% url 'clients:client_profile_details' user.client_profiles.pk %}">Client
-                                    Profile</a>
-                                </li>
+                            <li><a class="dropdown-item"
+                                   href="{% url 'clients:client_profile_details' user.client_profiles.pk %}">Client
+                                Profile</a>
+                            </li>
                             {% endif %}
-                        {% endif %}
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a></li>
-                    </ul>
-                    {% else %}
+                            <li><a class="dropdown-item" href="{% url 'core:list_banking_info'%}">Banking
+                                Information</a></li>
+
+                            {% endif %}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a></li>
+                        </ul>
+                        {% else %}
                         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
                            id="dropdownUser2"
                            data-bs-toggle="dropdown" aria-expanded="false">
@@ -266,7 +272,7 @@
                             <li><a class="dropdown-item" href="{% url 'social:begin' 'google-oauth2' %}">Registration
                                 via Gmail</a></li>
                         </ul>
-                    {% endif %}
+                        {% endif %}
                 </div>
             </nav>
         </div>
@@ -274,13 +280,13 @@
 
     <main class="px-3">
         {% block content %}
-            <h1>Cover your page.</h1>
-            <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit
-                the
-                text, and add your own fullscreen background photo to make it your own.</p>
-            <p class="lead">
-                <a href="#" class="btn btn-lg btn-light fw-bold border-white bg-white">Learn more</a>
-            </p>
+        <h1>Cover your page.</h1>
+        <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit
+            the
+            text, and add your own fullscreen background photo to make it your own.</p>
+        <p class="lead">
+            <a href="#" class="btn btn-lg btn-light fw-bold border-white bg-white">Learn more</a>
+        </p>
         {% endblock content %}
     </main>
 

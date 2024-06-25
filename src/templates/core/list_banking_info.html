@@ -1,0 +1,49 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<table class="table table-hover table-dark table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Holder name</th>
+        <th scope="col">Account number</th>
+        <th scope="col">Bank name</th>
+        <th scope="col">Country</th>
+        <th scope="col">Currency</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if banking_info.exists %}
+    {% for bank in banking_info %}
+    <tr>
+        <td>{{ bank.account_holder_name }}</td>
+        <td>{{ bank.account_number }}</td>
+        <td>{{ bank.bank_name }}</td>
+        <td>{{ bank.country }}</td>
+        <td>{{ bank.get_currency_display }}</td>
+        <td>
+            <a type="button" class="btn btn-warning"
+               href="{% url 'core:update_banking_info' bank.pk%}">Edit Banking Info
+            </a>
+        </td>
+        <td>
+            <a type="button" class="btn btn-danger"
+               href="{% url 'core:delete_banking_info' bank.pk %}">Delete Banking Info
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+        <td colspan="6" class="text-center">There is no banking information yet.</td>
+    </tr>
+    {% endif %}
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="{% url 'core:create_banking_info' %}">Add Banking Information</a>
+
+{% endblock content %}
