@@ -1,12 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   RedirectView, UpdateView)
 
-from clients.forms import ClientForm, JobForm, UpdateClientForm
-from clients.models import ClientProfile, Job
-from freelancers.models import Proposal
+from clients.forms import (ClientForm, ClientReviewForm, JobForm,
+                           UpdateClientForm)
+from clients.models import ClientProfile, Job, ReviewAboutClient
+from freelancers.models import FreelancerProfile, Proposal
 
 
 class CreateClientProfileView(LoginRequiredMixin, CreateView):
@@ -48,10 +50,21 @@ class JobListView(LoginRequiredMixin, ListView):
             )
             .filter(client_profile_id__user=self.request.user)
         )
+        filter_status = self.request.GET.get("filter_status")
         search_value = self.request.GET.get("search")
         if search_value:
             queryset = queryset.filter(title__icontains=search_value)
+        if filter_status == "is_concluded":
+            queryset = queryset.filter(is_concluded=True)
+        elif filter_status == "not_concluded":
+            queryset = queryset.filter(is_concluded=False)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["filter_status"] = self.request.GET.get("filter_status", "")
+        context["search_value"] = self.request.GET.get("search", "")
+        return context
 
 
 class JobUpdate(LoginRequiredMixin, UpdateView):
@@ -120,3 +133,53 @@ class IsConcludedProposalView(LoginRequiredMixin, RedirectView):
         job.save()
 
         return super().get_redirect_url(*args, **kwargs)
+
+
+class FreelancerProfileDetailView(LoginRequiredMixin, DetailView):
+    model = FreelancerProfile
+    template_name = "clients/freelancer_profile_info.html"
+    context_object_name = "freelancer_profile"
+
+    def get_object(self, queryset=None):
+        uuid = self.kwargs.get("uuid")
+        return get_object_or_404(FreelancerProfile, user__uuid=uuid)
+
+    def get_queryset(self):
+        return super().get_queryset().select_related("user", "city", "state", "country").prefetch_related("skills")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        freelancer_profile = self.get_object()
+        average_rating = freelancer_profile.received_reviews.aggregate(Avg("rating"))["rating__avg"] or 0.0
+        reviews = freelancer_profile.get_all_reviews()
+        context["received_reviews"] = reviews
+        context["average_rating"] = average_rating
+        return context
+
+
+class CreateClientReviewView(LoginRequiredMixin, CreateView):
+    model = ReviewAboutClient
+    form_class = ClientReviewForm
+    template_name = "clients/create_client_review.html"
+    success_url = reverse_lazy("freelancers:list_proposals")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        proposal_id = self.kwargs.get("proposal_id")
+        proposal = get_object_or_404(Proposal, pk=proposal_id)
+        context["job"] = proposal.job_id
+        return context
+
+    def form_valid(self, form):
+        proposal_id = self.kwargs.get("proposal_id")
+        proposal = get_object_or_404(Proposal, pk=proposal_id)
+
+        form.instance.job = proposal.job_id
+        form.instance.to_client = proposal.job_id.client_profile_id
+        form.instance.from_freelancer = self.request.user.freelancer_profiles
+
+        if proposal.selected:
+            return super().form_valid(form)
+        else:
+            form.add_error(None, "You can only leave a review after the proposal will be selected.")
+            return self.form_invalid(form)

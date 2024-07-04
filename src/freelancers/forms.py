@@ -4,7 +4,8 @@ from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
 from core.models import BankingInformation
-from freelancers.models import FreelancerProfile, Proposal
+from freelancers.models import (FreelancerProfile, Proposal,
+                                ReviewAboutFreelancer)
 
 
 class FreelancerForm(ModelForm):
@@ -93,4 +94,13 @@ class BankingInformationForm(ModelForm):
             "bank_name",
             "country",
             "currency",
+        )
+
+
+class FreelancerReviewForm(ModelForm):
+    class Meta:
+        model = ReviewAboutFreelancer
+        fields = (
+            "review",
+            "rating",
         )

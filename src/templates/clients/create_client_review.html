@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Create Review for {{ to_client.company|title }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Review</button>
+</form>
+<p>Reviewing Job: {{ job.title }}</p>
+{% endblock %}

@@ -1,6 +1,8 @@
 from django.urls import path
 
-from freelancers.views import (CreateFreelancerProfileView, CreateProposalView,
+from freelancers.views import (ClientProfileDetailView,
+                               CreateFreelancerProfileView,
+                               CreateFreelancerReviewView, CreateProposalView,
                                DeleteProposalView, FreelancerJobListView,
                                FreelancerProfileDetailView,
                                FreelancerProfileUpdateView, ListProposalView,
@@ -40,5 +42,15 @@ urlpatterns = [
         "delete_proposal/<int:pk>",
         DeleteProposalView.as_view(),
         name="delete_proposal",
+    ),
+    path(
+        "create_review/<int:proposal_id>",
+        CreateFreelancerReviewView.as_view(),
+        name="create_freelancer_review",
+    ),
+    path(
+        "client/<int:pk>/",
+        ClientProfileDetailView.as_view(),
+        name="client_info",
     ),
 ]

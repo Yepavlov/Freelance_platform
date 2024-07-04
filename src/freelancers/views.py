@@ -1,14 +1,16 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
 
-from clients.models import Job
-from freelancers.forms import (FreelancerForm, ProposalForm,
-                               UpdateFreelancerForm)
-from freelancers.models import FreelancerProfile, Proposal
+from clients.models import ClientProfile, Job
+from freelancers.forms import (FreelancerForm, FreelancerReviewForm,
+                               ProposalForm, UpdateFreelancerForm)
+from freelancers.models import (FreelancerProfile, Proposal,
+                                ReviewAboutFreelancer)
 
 
 class CreateFreelancerProfileView(LoginRequiredMixin, CreateView):
@@ -100,10 +102,21 @@ class ListProposalView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = Proposal.objects.filter(freelancer_profile_id__user=self.request.user)
-        search_query = self.request.GET.get("search", "")
+        search_query = self.request.GET.get("search")
+        filter_status = self.request.GET.get("filter_status")
         if search_query:
             queryset = queryset.filter(title__icontains=search_query)
+        if filter_status == "is_selected":
+            queryset = queryset.filter(selected=True)
+        elif filter_status == "not_selected":
+            queryset = queryset.filter(selected=False)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["filter_status"] = self.request.GET.get("filter_status", "")
+        context["search_value"] = self.request.GET.get("search", "")
+        return context
 
 
 class UpdateProposalView(LoginRequiredMixin, UpdateView):
@@ -119,3 +132,52 @@ class DeleteProposalView(LoginRequiredMixin, DeleteView):
     template_name = "freelancers/delete_proposal.html"
     queryset = Proposal.objects.all()
     success_url = reverse_lazy("freelancers:list_proposals")
+
+
+class CreateFreelancerReviewView(LoginRequiredMixin, CreateView):
+    model = ReviewAboutFreelancer
+    form_class = FreelancerReviewForm
+    template_name = "freelancers/create_freelancer_review.html"
+    success_url = reverse_lazy("clients:list_jobs")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        proposal_id = self.kwargs.get("proposal_id")
+        proposal = get_object_or_404(Proposal, pk=proposal_id)
+        context["job"] = proposal.job_id
+        return context
+
+    def form_valid(self, form):
+        proposal_id = self.kwargs.get("proposal_id")
+        proposal = get_object_or_404(Proposal, pk=proposal_id)
+
+        form.instance.job = proposal.job_id
+        form.instance.to_freelancer = proposal.freelancer_profile_id
+        form.instance.from_client = self.request.user.client_profiles
+
+        if proposal.selected:
+            return super().form_valid(form)
+        else:
+            form.add_error(None, "You can only leave a review after the job is concluded.")
+            return self.form_invalid(form)
+
+
+class ClientProfileDetailView(LoginRequiredMixin, DetailView):
+    model = ClientProfile
+    template_name = "freelancers/client_profile_info.html"
+    context_object_name = "client_profile"
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(ClientProfile, pk=self.kwargs.get("pk"))
+
+    def get_queryset(self):
+        return super().get_queryset().select_related("user", "city", "state", "country")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        client_profile = self.get_object()
+        average_rating = client_profile.received_reviews.aggregate(Avg("rating"))["rating__avg"] or 0.0
+        reviews = client_profile.get_all_reviews()
+        context["received_reviews"] = reviews
+        context["average_rating"] = average_rating
+        return context

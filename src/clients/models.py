@@ -47,6 +47,9 @@ class ClientProfile(models.Model):
     def __str__(self):
         return f"{self.company} {self.user.first_name} {self.user.last_name} {self.id}"
 
+    def get_all_reviews(self):
+        return self.received_reviews.select_related("from_freelancer__user", "job").all()
+
     @classmethod
     def generate_clients_profile(cls, count: int) -> None:
         faker = Faker()

@@ -86,6 +86,9 @@ class FreelancerProfile(models.Model):
             - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
         )
 
+    def get_all_reviews(self):
+        return self.received_reviews.select_related("from_client__user", "job").all()
+
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} {self.position} ({self.id})"
 

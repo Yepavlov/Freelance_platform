@@ -14,30 +14,30 @@ services:
       - media_content:/freelancer_platform/src/media
     env_file:
       - .env
-    depends_on:
-      - postgres
+#    depends_on:
+#      - postgres
 
-  postgres:
-    image: postgres:15.7
-    ports:
-      - "5432:5432"
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-    env_file:
-      - .env
+#  postgres:
+#    image: postgres:15.7
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - pg_data:/var/lib/postgresql/data
+#    env_file:
+#      - .env
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_container
-    restart: on-failure
-    env_file:
-      - .env
-    ports:
-      - "5000:80"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    depends_on:
-      - postgres
+#  pgadmin:
+#    image: dpage/pgadmin4
+#    container_name: pgadmin_container
+#    restart: on-failure
+#    env_file:
+#      - .env
+#    ports:
+#      - "5000:80"
+#    volumes:
+#      - pgadmin_data:/var/lib/pgadmin
+#    depends_on:
+#      - postgres
 
 
   #  mongodb:
@@ -79,28 +79,28 @@ services:
     depends_on:
       - backend
 
-  redis:
-    image: redis
-    env_file:
-      - .env
-    depends_on:
-      - backend
+#  redis:
+#    image: redis
+#    env_file:
+#      - .env
+#    depends_on:
+#      - backend
 
-  celery:
-    build: ./
-    container_name: celery_container
-    command: ./commands/start_celery.sh
-    restart: on-failure
-    volumes:
-      - ./src:/freelancer_platform
-      - ./commands:/freelancer_platform/commands
-    env_file:
-      - .env
-    depends_on:
-      - redis
-      - backend
-    ports:
-      - 5556:5555
+#  celery:
+#    build: ./
+#    container_name: celery_container
+#    command: ./commands/start_celery.sh
+#    restart: on-failure
+#    volumes:
+#      - ./src:/freelancer_platform
+#      - ./commands:/freelancer_platform/commands
+#    env_file:
+#      - .env
+#    depends_on:
+#      - redis
+#      - backend
+#    ports:
+#      - 5556:5555
 
 #  celerybeat:
 #    build: ./
@@ -126,22 +126,22 @@ services:
   #      - 8001:8001
   #    env_file: .env
 
-  redisadminold:
-    image: rediscommander/redis-commander:latest
-    container_name: redisadminold
-    hostname: redisadminold
-    restart: always
-    ports:
-      - 8092:8081
-    env_file:
-      - .env
+#  redisadminold:
+#    image: rediscommander/redis-commander:latest
+#    container_name: redisadminold
+#    hostname: redisadminold
+#    restart: always
+#    ports:
+#      - 8092:8081
+#    env_file:
+#      - .env
 
 
 
 
 volumes:
-  pg_data: { }
-  pgadmin_data: { }
+#  pg_data: { }
+#  pgadmin_data: { }
   #  mongo_data: { }
   static_content: { }
   media_content: { }

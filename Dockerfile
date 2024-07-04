@@ -19,6 +19,9 @@ RUN pip install --upgrade pip && pip install -r ./requirements.txt
 # Create logs directory
 RUN mkdir -p /freelancer_platform/LOGS
 
+# Ensure the start scripts are executable
+RUN chmod +x ./commands/start_server_prod.sh
+RUN chmod +x ./commands/start_celery.sh
 # Expose port (if necessary)
 EXPOSE 8000
 

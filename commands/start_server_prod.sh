@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd /freelancer_platform/
 
 python ./src/manage.py migrate
 python ./src/manage.py check

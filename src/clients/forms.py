@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
-from clients.models import ClientProfile, Job
+from clients.models import ClientProfile, Job, ReviewAboutClient
 
 
 class ClientForm(ModelForm):
@@ -79,3 +79,12 @@ class UpdateClientForm(ClientForm):
                 client_profile.save()
                 self.save_m2m()
         return client_profile
+
+
+class ClientReviewForm(ModelForm):
+    class Meta:
+        model = ReviewAboutClient
+        fields = (
+            "review",
+            "rating",
+        )

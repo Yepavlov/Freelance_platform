@@ -2,8 +2,10 @@ from django.urls import path
 
 from clients.views import (ClientProfileDetailView, ClientProfileUpdateView,
                            ClientProposalDetailView, CreateClientProfileView,
-                           CreateJobView, IsConcludedProposalView, JobDelete,
-                           JobListView, JobUpdate)
+                           CreateClientReviewView, CreateJobView,
+                           FreelancerProfileDetailView,
+                           IsConcludedProposalView, JobDelete, JobListView,
+                           JobUpdate)
 
 app_name = "clients"
 
@@ -48,5 +50,15 @@ urlpatterns = [
         "choose_proposal/<int:pk>/",
         IsConcludedProposalView.as_view(),
         name="choose_proposal",
+    ),
+    path(
+        "freelancer/<uuid:uuid>/",
+        FreelancerProfileDetailView.as_view(),
+        name="freelancer_info",
+    ),
+    path(
+        "create_review/<int:proposal_id>",
+        CreateClientReviewView.as_view(),
+        name="create_client_review",
     ),
 ]

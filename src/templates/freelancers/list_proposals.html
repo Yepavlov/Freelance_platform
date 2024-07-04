@@ -2,59 +2,88 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="row mb-3">
-        <div class="col-auto">
-            <form class="d-flex" method="GET" action="{% url 'freelancers:list_proposals' %}">
-                <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search"
-                       name="search">
-                <button class="btn btn-outline-primary" type="submit">Search</button>
-            </form>
-        </div>
+<div class="row mb-3">
+    <div class="col-auto">
+        <form class="d-flex" method="GET" action="{% url 'freelancers:list_proposals' %}">
+            <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search"
+                   name="search">
+            <select class="form-select me-2" name="filter_status">
+                <option value="">All Proposals</option>
+                <option value="is_selected">Selected Proposals</option>
+                <option value="not_selected">Not Selected Proposals</option>
+            </select>
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
     </div>
+</div>
 
-    <table class="table table-hover table-dark table-striped">
-        <thead>
-        <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Hourly Rate</th>
-            <th scope="col">Estimated End Date</th>
-            <th scope="col">Documentation</th>
-            <th scope="col">Job</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if proposals.exists %}
-            {% for proposal in proposals %}
-                <tr>
-                    <td>{{ proposal.title }}</td>
-                    <td>${{ proposal.hourly_rate }}</td>
-                    <td>{{ proposal.estimated_end_date }}</td>
-                    <td>
-                        {% if proposal.documentation %}
-                            {{ proposal.documentation.url }}
-                        {% else %}
-                            None
-                        {% endif %}
-                    </td>
-                    <td>{{ proposal.job_id.title }}</td>
-                    <td>
-                        <a type="button" class="btn btn-warning"
-                           href={% url 'freelancers:update_proposal' proposal.pk %}>Edit a proposal
-                        </a>
-                    </td>
-                    <td>
-                        <a type="button" class="btn btn-danger"
-                           href={% url 'freelancers:delete_proposal' proposal.pk %}>Delete a proposal
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="6" class="text-center">There are no proposals yet.</td>
-            </tr>        {% endif %}
-        </tbody>
-    </table>
+<table class="table table-hover table-dark table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Hourly Rate</th>
+        <th scope="col">Estimated End Date</th>
+        <th scope="col">Documentation</th>
+        <th scope="col">Selected</th>
+        <th scope="col">Job</th>
+        <th scope="col">Client</th>
+        <th scope="col">Rate the Client</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% if proposals.exists %}
+    {% for proposal in proposals %}
+    <tr>
+        <td>{{ proposal.title }}</td>
+        <td>${{ proposal.hourly_rate }}</td>
+        <td>{{ proposal.estimated_end_date }}</td>
+        <td>
+            {% if proposal.documentation %}
+            {{ proposal.documentation.url }}
+            {% else %}
+            None
+            {% endif %}
+        </td>
+        <td>
+            {% if proposal.selected %}
+            <p>Yes</p>
+            {% else %}
+            <p>No</p>
+            {% endif %}
+        </td>
+        <td>{{ proposal.job_id.title }}</td>
+        <td>
+            <a class="btn btn-danger"
+               href="{% url 'freelancers:client_info' proposal.job_id.client_profile_id.pk %}">
+                {{ proposal.job_id.client_profile_id.company|title }}
+            </a>
+        </td>
+        <td>
+            <a class="btn btn-danger"
+               href="{% url 'clients:create_client_review' proposal.pk %}">
+                Rate
+            </a>
+        </td>
+        <td>
+            <a type="button" class="btn btn-warning"
+               href={% url 'freelancers:update_proposal' proposal.pk %}>Edit a proposal
+            </a>
+        </td>
+        <td>
+            <a type="button" class="btn btn-danger"
+               href={% url 'freelancers:delete_proposal' proposal.pk %}>Delete a proposal
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+        <td colspan="6" class="text-center">There are no proposals yet.</td>
+    </tr>
+    {% endif %}
+    </tbody>
+</table>
 {% endblock content %}

@@ -6,7 +6,10 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = [
+    "localhost",
+    "ec2-3-14-148-198.us-east-2.compute.amazonaws.com",
+]
 
 DATABASES = {
     "default": {
@@ -20,5 +23,3 @@ STATIC_URL = "/static/"
 
 MEDIA_ROOT = BASE_DIR / "media/"
 MEDIA_URL = "/media/"
-print(MEDIA_ROOT)
-print(STATIC_ROOT)
