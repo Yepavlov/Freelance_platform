@@ -1,0 +1,88 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-auto">
+        <form class="d-flex" method="GET" action="{% url 'clients:list_jobs' %}">
+            <input class="form-control me-2" type="search" placeholder="Search Jobs" aria-label="Search"
+                   name="search">
+            <select class="form-select me-2" name="filter_status">
+                <option value="">All Jobs</option>
+                <option value="is_concluded">Concluded Jobs</option>
+                <option value="not_concluded">Jobs Not Concluded</option>
+            </select>
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+<table class="table table-hover table-dark table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Hourly Rate</th>
+        <th scope="col">Estimated End Date</th>
+        <th scope="col">Skills</th>
+        <th scope="col">Documentation</th>
+        <th scope="col">Concluded</th>
+        <th scope="col">Proposals</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for job in jobs %}
+    <tr>
+        <td>{{ job.title }}</td>
+        <td>{{ job.description }}</td>
+        <td>${{ job.hourly_rate }}</td>
+        <td>{{ job.estimated_end_date }}</td>
+        <td>
+            {% for skill in job.skill.all %}
+            <span class="badge bg-primary">{{ skill.title }}</span>
+            {% endfor %}
+        </td>
+        <td>
+            {% if job.documentation %}
+            <a href="{{ job.documentation.url }}">Download</a>
+            {% else %}
+            None
+            {% endif %}
+        </td>
+        <td>
+            {% if job.is_concluded %}
+            <p>Yes</p>
+            {% else %}
+            <p>No</p>
+            {% endif %}
+        </td>
+        <td>
+            {% if job.proposals %}
+            {% for proposal in job.proposals.all %}
+            <a href="{% url 'clients:job_proposal_detail' proposal.pk %}">{{ proposal.title }}</a>
+            {% if not forloop.last %}, {% endif %}
+            {% empty %}
+            Empty
+            {% endfor %}
+            {% endif %}
+        </td>
+        <td>
+            <a type="button" class="btn btn-warning"
+               href={% url 'clients:job_update' job.pk %}>Edit
+            </a>
+        </td>
+        <td>
+            <a type="button" class="btn btn-danger"
+               href={% url 'clients:job_delete' job.pk %}>Delete
+            </a>
+        </td>
+
+
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

@@ -1,0 +1,49 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="table-responsive">
+        <table class="table table-hover table-dark table-striped w-100">
+            <thead>
+            <tr>
+                <th scope="col">Image</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>User type</th>
+                <th>Phone Number</th>
+                <th>Company name</th>
+                <th>Company Description</th>
+                <th>Country</th>
+                <th>State</th>
+                <th>City</th>
+                <th>Update Client Profile</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <img src="{{ client_profile.image.url }}" alt="Photo" style="max-width: 100px;">
+                </td>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.last_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.get_user_type_display }}</td>
+                <td>{{ user.phone_number }}</td>
+                <td>{{ client_profile.company }}</td>
+                <td>{{ client_profile.company_description }}</td>
+                <td>{{ client_profile.country }}</td>
+                <td>{{ client_profile.state }}</td>
+                <td>{{ client_profile.city }}</td>
+                <td>
+                    <a type="button" class="btn btn-warning"
+                       href={% url 'clients:client_profile_update' client_profile.pk %}>Edit
+                    </a>
+                </td>
+
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

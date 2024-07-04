@@ -1,0 +1,93 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="table-responsive">
+    <table class="table table-hover table-dark table-striped w-100">
+        <thead>
+        <tr>
+            <th scope="col">Photo</th>
+            <th>Full Name</th>
+            <th>Rating</th>
+            <th>Email</th>
+            <th>Birth Date</th>
+            <th>Age</th>
+            <th>User type</th>
+            <th>Phone Number</th>
+            <th>Position</th>
+            <th>Description</th>
+            <th>Hourly rate</th>
+            <th>Country</th>
+            <th>State</th>
+            <th>City</th>
+            <th>Sex</th>
+            <th>Resume</th>
+            <th>Skill</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <img src="{{ freelancer_profile.photo.url }}" alt="Photo" style="max-width: 100px;">
+            </td>
+            <td>{{ freelancer_profile.user.get_full_name|title }}</td>
+            <td>{{ average_rating|floatformat:1 }}</td>
+            <td>{{ freelancer_profile.user.email }}</td>
+            {% if freelancer_profile.birth_date %}
+            <td>{{ freelancer_profile.birth_date }}</td>
+            <td>{{ freelancer_profile.age }}</td>
+            {% else %}
+            <td>Unknown</td>
+            <td>Unknown</td>
+            {% endif %}
+            <td>{{ freelancer_profile.user.get_user_type_display }}</td>
+            <td>{{ freelancer_profile.user.phone_number }}</td>
+            <td>{{ freelancer_profile.position }}</td>
+            <td>{{ freelancer_profile.description }}</td>
+            <td>{{ freelancer_profile.hourly_rate }}</td>
+            <td>{{ freelancer_profile.country }}</td>
+            <td>{{ freelancer_profile.state }}</td>
+            <td>{{ freelancer_profile.city }}</td>
+            <td>{{ freelancer_profile.get_sex_display }}</td>
+            <td>{{ freelancer_profile.resume }}</td>
+            <td>
+                {% for skill in freelancer_profile.skill.all %}
+                {{ skill }}
+                {% if not forloop.last %}, {% endif %}
+                {% empty %}
+                Empty
+                {% endfor %}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-dark table-striped w-100">
+        <thead>
+        <tr>
+            <th>Review</th>
+            <th>Rating</th>
+            <th>From Client</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if received_reviews %}
+        {% for review in received_reviews %}
+        <tr>
+            <td>{{ review.review }}</td>
+            <td>{{ review.rating }}</td>
+            <td>{{ review.from_client.company|title }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td>There is no review yet</td>
+            <td>There is no rating yet</td>
+            <td>Empty</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

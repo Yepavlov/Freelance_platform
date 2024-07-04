@@ -1,0 +1,36 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <table class="table table-hover table-dark table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Hourly Rate</th>
+                <th scope="col">Estimated End Date</th>
+                <th scope="col">Documentation</th>
+                <th scope="col">Job</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ proposal.title }}</td>
+                <td>${{ proposal.hourly_rate }}</td>
+                <td>{{ proposal.estimated_end_date }}</td>
+                <td>
+                    {% if proposal.documentation %}
+                        {{ proposal.documentation.url }}
+                    {% else %}
+                        None
+                    {% endif %}
+                </td>
+                <td>{{ proposal.job_id.title }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <input type="submit" class="btn btn-primary" value="Delete">
+    </form>
+{% endblock content %}
