@@ -1,0 +1,67 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="table-responsive">
+    <table class="table table-hover table-dark table-striped w-100">
+        <thead>
+        <tr>
+            <th scope="col">Image</th>
+            <th>Face of the company</th>
+            <th>Rating</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Company</th>
+            <th>Company Description</th>
+            <th>Country</th>
+            <th>State</th>
+            <th>City</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <img src="{{ client_profile.image.url }}" alt="Image" style="max-width: 100px;">
+            </td>
+            <td>{{ client_profile.user.get_full_name|title }}</td>
+            <td>{{ average_rating|floatformat:1 }}</td>
+            <td>{{ client_profile.user.email }}</td>
+            <td>{{ client_profile.user.phone_number }}</td>
+            <td>{{ client_profile.company }}</td>
+            <td>{{ client_profile.company_description }}</td>
+            <td>{{ client_profile.country }}</td>
+            <td>{{ client_profile.state }}</td>
+            <td>{{ client_profile.city }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-dark table-striped w-100">
+        <thead>
+        <tr>
+            <th>Review</th>
+            <th>Rating</th>
+            <th>From Freelancer</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if received_reviews %}
+        {% for review in received_reviews %}
+        <tr>
+            <td>{{ review.review }}</td>
+            <td>{{ review.rating }}</td>
+            <td>{{ review.from_freelancer.user.get_full_name|title }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td>There is no review yet</td>
+            <td>There is no rating yet</td>
+            <td>Empty</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

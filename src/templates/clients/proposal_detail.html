@@ -1,0 +1,55 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<table class="table table-hover table-dark table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Hourly Rate</th>
+        <th scope="col">Estimated End Date</th>
+        <th scope="col">Documentation</th>
+        <th scope="col">Freelancer</th>
+        <th scope="col">Rate the Freelancer</th>
+        <th scope="col">Job</th>
+        <th scope="col">Choose</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{ proposal.title }}</td>
+        <td>${{ proposal.hourly_rate }}</td>
+        <td>{{ proposal.estimated_end_date }}</td>
+        <td>
+            {% if proposal.documentation %}
+            <a href="{{ proposal.documentation.url }}">View Documentation</a>
+            {% else %}
+            None
+            {% endif %}
+        </td>
+        <td>
+            <a class="btn btn-danger"
+               href="{% url 'clients:freelancer_info' proposal.freelancer_profile_id.user.uuid %}">
+                {{ proposal.freelancer_profile_id.user.get_full_name|title }}
+            </a>
+        </td>
+        <td>
+            <a class="btn btn-danger"
+               href="{% url 'freelancers:create_freelancer_review' proposal.pk %}">
+                Rate
+            </a>
+        </td>
+        <td>{{ proposal.job_id.title }}</td>
+        <td>
+            {% if not proposal.selected %}
+            <a class="btn btn-danger"
+               href="{% url 'clients:choose_proposal' proposal.pk %}">Choose the proposal</a>
+            {% else %}
+            This proposal has already concluded
+            {% endif %}
+        </td>
+    </tr>
+    </tbody>
+</table>
+{% endblock content %}

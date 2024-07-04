@@ -1,0 +1,30 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <table class="table table-hover table-dark table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Holder name</th>
+            <th scope="col">Account number</th>
+            <th scope="col">Bank name</th>
+            <th scope="col">Country</th>
+            <th scope="col">Currency</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ banking_info.account_holder_name }}</td>
+            <td>{{ banking_info.account_number }}</td>
+            <td>{{ banking_info.bank_name }}</td>
+            <td>{{ banking_info.country }}</td>
+            <td>{{ banking_info.get_currency_display }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <input type="submit" class="btn btn-primary" value="Delete">
+</form>
+{% endblock content %}
