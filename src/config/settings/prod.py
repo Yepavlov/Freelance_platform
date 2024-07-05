@@ -1,15 +1,11 @@
-import os
-
 from config.settings.base import *  # NOQA
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "ec2-3-14-148-198.us-east-2.compute.amazonaws.com",
-]
+ALLOWED_HOSTS = ["ec2-3-16-30-55.us-east-2.compute.amazonaws.com", "localhost"]
+
 
 DATABASES = {
     "default": {
@@ -17,6 +13,9 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",  # NOQA
     }
 }
+
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 STATIC_ROOT = BASE_DIR / "static/"
 STATIC_URL = "/static/"
