@@ -142,7 +142,7 @@ services:
 volumes:
 #  pg_data: { }
 #  pgadmin_data: { }
-  #  mongo_data: { }
+#  mongo_data: { }
   static_content: { }
   media_content: { }
 
